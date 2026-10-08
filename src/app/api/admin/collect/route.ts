@@ -14,6 +14,11 @@ export const POST = endpoint(async () => {
       503,
       "Background collection is not configured. Connect Inngest and configure its event and signing keys before starting collection.",
     );
+  if (!process.env.GEMINI_API_KEY)
+    throw new ApiError(
+      503,
+      "AI analysis is not configured. Add GEMINI_API_KEY before starting collection.",
+    );
   const event = await inngest.send({
     name: "painradar/collect.requested",
     data: { requestedBy: u.id },

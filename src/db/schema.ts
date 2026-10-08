@@ -113,6 +113,7 @@ export const rawSignals = pgTable(
     metadata: jsonb("metadata").default({}).notNull(),
     contentHash: text("content_hash").notNull(),
     embedding: vector("embedding", { dimensions: 1536 }),
+    embeddingModel: text("embedding_model").default("openai:legacy").notNull(),
     duplicateOf: uuid("duplicate_of"),
     processedAt: timestamp("processed_at", { withTimezone: true }),
     retiredAt: timestamp("retired_at", { withTimezone: true }),
@@ -139,6 +140,7 @@ export const painClusters = pgTable("pain_clusters", {
   audience: text("audience").notNull(),
   keywords: jsonb("keywords").$type<string[]>().default([]).notNull(),
   embedding: vector("embedding", { dimensions: 1536 }),
+  embeddingModel: text("embedding_model").default("openai:legacy").notNull(),
   analysis: jsonb("analysis")
     .$type<Record<string, unknown>>()
     .default({})

@@ -18,6 +18,7 @@ import {
   commitAnalysisBatch,
 } from "./analysis-batches";
 import { Inngest } from "inngest";
+import { embeddingModel, freeTier } from "./gemini";
 import { db } from "@/db";
 import { sources, jobRuns, rawSignals } from "@/db/schema";
 import { eq, and, isNull, sql } from "drizzle-orm";
@@ -97,7 +98,7 @@ export const dailyPipeline = inngest.createFunction(
         .from(rawSignals)
         .where(
           and(
-            isNull(rawSignals.embedding),
+            sql`(${rawSignals.embedding} is null or (${rawSignals.embeddingModel} <> ${embeddingModel()} and ${rawSignals.processedAt} is null))`,
             isNull(rawSignals.duplicateOf),
             isNull(rawSignals.retiredAt),
           ),
@@ -105,10 +106,12 @@ export const dailyPipeline = inngest.createFunction(
         .orderBy(rawSignals.discoveredAt)
         .limit(PIPELINE_LIMITS.embeddings),
     );
-    for (const signal of pendingEmbeddings)
+    for (const signal of pendingEmbeddings) {
+      if (freeTier()) await step.sleep("embedding-quota-" + signal.id, "13s");
       await step.run("createEmbeddings-" + signal.id, () =>
         pipeline.createEmbeddings(jobId, signal.id),
       );
+    }
     await step.run("deduplicateSignals", () => pipeline.deduplicateSignals());
     const pendingClusters = await step.run("pending-clusters", async () =>
       db()
@@ -119,17 +122,21 @@ export const dailyPipeline = inngest.createFunction(
             isNull(rawSignals.processedAt),
             isNull(rawSignals.duplicateOf),
             sql`${rawSignals.embedding} is not null`,
+            eq(rawSignals.embeddingModel, embeddingModel()),
           ),
         )
         .orderBy(rawSignals.discoveredAt)
         .limit(PIPELINE_LIMITS.seeds),
     );
-    for (const signal of pendingClusters)
+    for (const signal of pendingClusters) {
+      if (freeTier()) await step.sleep("analysis-quota-" + signal.id, "13s");
       await step.run("clusterSignals-" + signal.id, () =>
         pipeline.clusterSignalsJob(jobId, signal.id),
       );
+    }
     const batch = await step.run("analysis-batch", () => planAnalysisBatch());
     for (const id of batch.ids) {
+      if (freeTier()) await step.sleep("cluster-analysis-quota-" + id, "13s");
       await step.run("analyzeClusters-" + id, () =>
         pipeline.analyzeClusters(jobId, id),
       );

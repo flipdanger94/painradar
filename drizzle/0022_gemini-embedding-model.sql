@@ -1,0 +1,2 @@
+ALTER TABLE "pain_clusters" ADD COLUMN "embedding_model" text DEFAULT 'openai:legacy' NOT NULL;--> statement-breakpoint
+ALTER TABLE "raw_signals" ADD COLUMN "embedding_model" text DEFAULT 'openai:legacy' NOT NULL;

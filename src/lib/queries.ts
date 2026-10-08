@@ -1,3 +1,4 @@
+import { embeddingModel } from "./gemini";
 import { and, eq, asc, desc, sql, gte, ilike, or, inArray } from "drizzle-orm";
 import { opportunityPageBoundary } from "./opportunity-pagination";
 import type { PageCursor } from "./api-pagination";
@@ -80,12 +81,12 @@ export async function listOpportunities(
     const text = f.q.slice(0, 200);
     const authenticatedUser = userId || (await getSession())?.user.id;
     const vector =
-      process.env.OPENAI_API_KEY && authenticatedUser
+      process.env.GEMINI_API_KEY && authenticatedUser
         ? await embedding(text, "search", authenticatedUser)
         : null;
     const v = JSON.stringify(vector);
     conditions.push(
-      sql`(${opportunities.id} in (select o.id from opportunities o join pain_clusters c on c.id=o.cluster_id where to_tsvector('simple',o.title||' '||o.summary||' '||o.industry||' '||o.audience||' '||c.keywords::text) @@ plainto_tsquery('simple',${text}) ${vector ? sql`or c.embedding <=> ${v}::vector < 0.3` : sql``}))`,
+      sql`(${opportunities.id} in (select o.id from opportunities o join pain_clusters c on c.id=o.cluster_id where to_tsvector('simple',o.title||' '||o.summary||' '||o.industry||' '||o.audience||' '||c.keywords::text) @@ plainto_tsquery('simple',${text}) ${vector ? sql`or (c.embedding_model=${embeddingModel()} and c.embedding <=> ${v}::vector < 0.3)` : sql``}))`,
     );
   }
   return db()
