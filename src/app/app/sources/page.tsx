@@ -11,7 +11,7 @@ export default async function Page() {
   const admin = session?.user.role === "admin";
   const collectionReady =
     !!process.env.INNGEST_EVENT_KEY && !!process.env.INNGEST_SIGNING_KEY;
-  const analysisReady = !!process.env.OPENAI_API_KEY;
+  const analysisReady = !!process.env.GEMINI_API_KEY;
   const list = [
     {
       id: "hn",
@@ -60,7 +60,7 @@ export default async function Page() {
           {!analysisReady && (
             <p>
               AI analysis is not configured. The administrator must configure
-              OpenAI before opportunities can be analyzed.
+              Gemini before opportunities can be analyzed.
             </p>
           )}
           {admin ? (

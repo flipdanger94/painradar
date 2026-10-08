@@ -4,7 +4,6 @@ import { TrackEvent } from "@/components/track-event";
 import { eq } from "drizzle-orm";
 import { competitorResearch } from "@/db/schema";
 import { CompetitorResults, MarketGap } from "@/components/competitor-results";
-import { ApiButton } from "@/components/actions";
 import { notFound } from "next/navigation";
 import { sql } from "drizzle-orm";
 import { db } from "@/db";
@@ -236,13 +235,10 @@ export default async function Page({
                 />
               </>
             )}
-            {workspace?.role !== "viewer" && (
-              <ApiButton
-                endpoint="/api/research"
-                payload={{ id: o.id, workspaceId: workspace?.id }}
-                label="Research actual competitors ↗"
-              />
-            )}
+            <p className="text-small">
+              Live competitor web research is unavailable in this Gemini
+              configuration. Existing cited research remains available.
+            </p>
             <h2>Market gap</h2>
             <MarketGap results={researched?.results || []} />
             {researched && (

@@ -14,6 +14,7 @@ import { adapters, type SourceConfig, type RawSignal } from "./sources";
 import { collectionCheckpointGuard } from "./sources/checkpoint";
 import { collectionWindow, collectWindow } from "./sources/collection";
 import { embedding, analyze, hash } from "./ai";
+import { embeddingModel } from "./gemini";
 import {
   opportunityScore,
   confidence,
@@ -143,7 +144,7 @@ export async function createEmbeddings(jobId: string, signalId?: string) {
     .from(rawSignals)
     .where(
       and(
-        isNull(rawSignals.embedding),
+        sql`(${rawSignals.embedding} is null or (${rawSignals.embeddingModel} <> ${embeddingModel()} and ${rawSignals.processedAt} is null))`,
         isNull(rawSignals.retiredAt),
         isNull(rawSignals.duplicateOf),
         signalId ? eq(rawSignals.id, signalId) : undefined,
@@ -155,14 +156,14 @@ export async function createEmbeddings(jobId: string, signalId?: string) {
     const vector = await embedding(signal.title + "\n" + signal.content, jobId);
     await db()
       .update(rawSignals)
-      .set({ embedding: vector })
+      .set({ embedding: vector, embeddingModel: embeddingModel() })
       .where(and(eq(rawSignals.id, signal.id), isNull(rawSignals.retiredAt)));
   }
   return signals.length;
 }
 export async function deduplicateSignals() {
   const result = await db().execute(
-    sql`with duplicates as (select s.id,(select t.id from raw_signals t where t.embedding is not null and t.duplicate_of is null and t.id<>s.id and (t.created_at,t.id)<(s.created_at,s.id) and (t.embedding <=> s.embedding)<0.025 order by t.embedding <=> s.embedding limit 1) as original from (select * from raw_signals where embedding is not null and processed_at is null and duplicate_of is null order by created_at,id limit 200) s) update raw_signals set duplicate_of=duplicates.original,processed_at=now() from duplicates where raw_signals.id=duplicates.id and duplicates.original is not null returning raw_signals.id`,
+    sql`with duplicates as (select s.id,(select t.id from raw_signals t where t.embedding is not null and t.embedding_model=s.embedding_model and t.duplicate_of is null and t.id<>s.id and (t.created_at,t.id)<(s.created_at,s.id) and (t.embedding <=> s.embedding)<0.025 order by t.embedding <=> s.embedding limit 1) as original from (select * from raw_signals where embedding is not null and processed_at is null and duplicate_of is null order by created_at,id limit 200) s) update raw_signals set duplicate_of=duplicates.original,processed_at=now() from duplicates where raw_signals.id=duplicates.id and duplicates.original is not null returning raw_signals.id`,
   );
   return result.rows.length;
 }
@@ -192,6 +193,7 @@ export async function clusterSignalsJob(jobId: string, signalId?: string) {
         isNull(rawSignals.processedAt),
         isNull(rawSignals.duplicateOf),
         sql`${rawSignals.embedding} is not null`,
+        eq(rawSignals.embeddingModel, embeddingModel()),
         signalId ? eq(rawSignals.id, signalId) : undefined,
       ),
     )
@@ -207,7 +209,7 @@ export async function clusterSignalsJob(jobId: string, signalId?: string) {
     if (assigned.length) continue;
     const v = JSON.stringify(seed.embedding);
     const nearest = await db().execute(
-      sql`select id from pain_clusters where embedding <=> ${v}::vector < 0.18 order by embedding <=> ${v}::vector limit 1`,
+      sql`select id from pain_clusters where embedding_model=${seed.embeddingModel} and embedding <=> ${v}::vector < 0.18 order by embedding <=> ${v}::vector limit 1`,
     );
     if (nearest.rows[0]) {
       await db()
@@ -221,7 +223,7 @@ export async function clusterSignalsJob(jobId: string, signalId?: string) {
       continue;
     }
     const similar = await db().execute(
-      sql`select s.* from raw_signals s where s.duplicate_of is null and s.processed_at is null and s.embedding is not null and s.embedding <=> ${v}::vector < 0.18 and not exists(select 1 from cluster_signals cs where cs.signal_id=s.id) order by s.embedding <=> ${v}::vector limit 40`,
+      sql`select s.* from raw_signals s where s.duplicate_of is null and s.processed_at is null and s.embedding is not null and s.embedding_model=${seed.embeddingModel} and s.embedding <=> ${v}::vector < 0.18 and not exists(select 1 from cluster_signals cs where cs.signal_id=s.id) order by s.embedding <=> ${v}::vector limit 40`,
     );
     const authors = new Set(
       similar.rows.map((r) => String(r.source) + ":" + String(r.author)),
@@ -270,6 +272,7 @@ export async function clusterSignalsJob(jobId: string, signalId?: string) {
         audience: analysis.audience,
         keywords: analysis.keywords,
         embedding: seed.embedding,
+        embeddingModel: seed.embeddingModel,
         analysis,
       })
       .onConflictDoNothing();

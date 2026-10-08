@@ -1,9 +1,10 @@
+import { freeTier } from "./gemini";
 import { sql } from "drizzle-orm";
 import { db } from "@/db";
 export const PIPELINE_LIMITS = {
-  embeddings: 200,
-  seeds: 200,
-  analysis: 200,
+  embeddings: freeTier() ? 40 : 200,
+  seeds: freeTier() ? 20 : 200,
+  analysis: freeTier() ? 20 : 200,
   publicationClaims: 5,
   publicationPages: 20,
   publicationPageSize: 100,

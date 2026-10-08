@@ -25,7 +25,7 @@ export const POST = endpoint(async (req) => {
     )
   )
     throw new ApiError(403, "Founder plan required for competitor research");
-  const result = await researchCompetitors(id, u.id);
+  const result = await researchCompetitors(id);
   await audit(u.id, "competitors.researched", { opportunityId: id });
   return Response.json(result);
 });

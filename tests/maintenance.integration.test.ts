@@ -78,6 +78,23 @@ beforeEach(async () => {
 });
 afterEach(() => vi.unstubAllEnvs());
 describe("bounded maintenance production SQL", () => {
+  it("never deduplicates identical coordinates from different embedding models", async () => {
+    await signal(1);
+    await signal(2, { processed_at: null });
+    await state.pg!.exec(
+      "update raw_signals set embedding=array_fill(0.1::real,array[1536])::vector",
+    );
+    await state.pg!.query(
+      "update raw_signals set embedding_model='gemini-embedding-2' where id=$1",
+      [id(2)],
+    );
+    expect(await deduplicateSignals()).toBe(0);
+    await state.pg!.query(
+      "update raw_signals set embedding_model='gemini-embedding-2' where id=$1",
+      [id(1)],
+    );
+    expect(await deduplicateSignals()).toBe(1);
+  });
   it("defaults to disabled and rejects malformed or overly short policies", async () => {
     vi.stubEnv("DATA_MAINTENANCE_ENABLED", undefined);
     expect(maintenancePolicy().enabled).toBe(false);
