@@ -154,7 +154,7 @@ export const dailyPipeline = inngest.createFunction(
       );
     }
     await step.run("deduplicateSignals", () => pipeline.deduplicateSignals());
-    const grouping = await step.run("pending-clusters", () =>
+    const grouping = await step.run("grouping-batch", () =>
       planGroupingBatch(),
     );
     const pendingClusters = grouping.ids.map((id) => ({ id }));
