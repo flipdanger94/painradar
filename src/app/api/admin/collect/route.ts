@@ -1,3 +1,8 @@
+import { z } from "zod";
+import { input } from "@/lib/security";
+import { randomUUID } from "node:crypto";
+import { db } from "@/db";
+import { sql } from "drizzle-orm";
 import {
   endpoint,
   requireAdmin,
@@ -6,7 +11,7 @@ import {
   ApiError,
 } from "@/lib/security";
 import { inngest } from "@/lib/jobs";
-export const POST = endpoint(async () => {
+export const POST = endpoint(async (req) => {
   const u = await requireAdmin();
   await rateLimit("collect:" + u.id);
   if (!process.env.INNGEST_EVENT_KEY || !process.env.INNGEST_SIGNING_KEY)
@@ -19,10 +24,38 @@ export const POST = endpoint(async () => {
       503,
       "AI analysis is not configured. Add GEMINI_API_KEY before starting collection.",
     );
-  const event = await inngest.send({
-    name: "painradar/collect.requested",
-    data: { requestedBy: u.id },
-  });
+  const body = await input(
+    req,
+    z.object({ collectSources: z.boolean().optional() }),
+  );
+  const jobId = randomUUID();
+  const reservation = await db().execute(
+    sql`insert into job_runs(id,job,status) values(${jobId},'daily-radar','queued') on conflict do nothing returning id`,
+  );
+  if (!reservation.rows.length)
+    throw new ApiError(
+      409,
+      "A collection run is already active. Follow its progress before starting another.",
+    );
+  let event;
+  try {
+    event = await inngest.send({
+      name: "painradar/collect.requested",
+      data: {
+        jobId,
+        requestedBy: u.id,
+        collectSources: body.collectSources !== false,
+      },
+    });
+  } catch {
+    await db().execute(
+      sql`update job_runs set status='failed',error='Event dispatch failed',finished_at=now() where id=${jobId}`,
+    );
+    throw new ApiError(
+      503,
+      "Unable to dispatch collection. Check Inngest configuration.",
+    );
+  }
   await audit(u.id, "pipeline.triggered");
   return Response.json({ ok: true, ids: event.ids });
 });

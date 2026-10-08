@@ -1,4 +1,6 @@
 "use client";
+import { Text, useTranslation } from "@/components/language-provider";
+
 import { languageCodes, languageLabels } from "@/lib/language-options";
 import { industries } from "@/lib/taxonomy";
 import { useState } from "react";
@@ -28,6 +30,7 @@ export function RadarForm({
   workspaceId?: string;
   radar?: RadarValues;
 }) {
+  const t = useTranslation();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -80,7 +83,7 @@ export function RadarForm({
     >
       <div>
         <label htmlFor={`${radar?.id || workspaceId || "new"}-name`}>
-          Radar name
+          <Text value={"Radar name"} />
         </label>
         <input
           id={`${radar?.id || workspaceId || "new"}-name`}
@@ -94,7 +97,7 @@ export function RadarForm({
       </div>
       <div>
         <label htmlFor={`${radar?.id || workspaceId || "new"}-keywords`}>
-          Keywords, separated by commas
+          <Text value={"Keywords, separated by commas"} />
         </label>
         <input
           id={`${radar?.id || workspaceId || "new"}-keywords`}
@@ -107,7 +110,7 @@ export function RadarForm({
       </div>
       <div>
         <label htmlFor={`${radar?.id || workspaceId || "new"}-excluded`}>
-          Excluded words
+          <Text value={"Excluded words"} />
         </label>
         <input
           id={`${radar?.id || workspaceId || "new"}-excluded`}
@@ -119,7 +122,7 @@ export function RadarForm({
       </div>
       <div>
         <label htmlFor={`${radar?.id || workspaceId || "new"}-industries`}>
-          Industries (optional)
+          <Text value={"Industries (optional)"} />
         </label>
         <input
           id={`${radar?.id || workspaceId || "new"}-industries`}
@@ -136,7 +139,9 @@ export function RadarForm({
         </datalist>
       </div>
       <fieldset>
-        <legend className="text-small muted">Sources</legend>
+        <legend className="text-small muted">
+          <Text value={"Sources"} />
+        </legend>
         {[
           ["hn", "Hacker News"],
           ["github", "GitHub Issues"],
@@ -163,7 +168,7 @@ export function RadarForm({
         ))}
       </fieldset>
       <fieldset>
-        <legend className="text-small muted">Languages</legend>
+        <legend className="text-small muted">{t("Languages")}</legend>
         {languageCodes.map((id) => (
           <label
             key={id}
@@ -183,13 +188,13 @@ export function RadarForm({
                 radar ? radar.languages.includes(id) : id === "en"
               }
             />
-            {languageLabels[id]}
+            {t(languageLabels[id])}
           </label>
         ))}
       </fieldset>
       <div>
         <label htmlFor={`${radar?.id || workspaceId || "new"}-threshold`}>
-          Alert score threshold
+          <Text value={"Alert score threshold"} />
         </label>
         <input
           id={`${radar?.id || workspaceId || "new"}-threshold`}
@@ -203,15 +208,19 @@ export function RadarForm({
       </div>
       <div>
         <label htmlFor={`${radar?.id || workspaceId || "new"}-frequency`}>
-          Frequency
+          <Text value={"Frequency"} />
         </label>
         <select
           id={`${radar?.id || workspaceId || "new"}-frequency`}
           name="frequency"
           defaultValue={radar?.frequency ?? "daily"}
         >
-          <option value="daily">Daily</option>
-          <option value="weekly">Weekly</option>
+          <option value="daily">
+            <Text value={"Daily"} />
+          </option>
+          <option value="weekly">
+            <Text value={"Weekly"} />
+          </option>
         </select>
       </div>
       {error && (
@@ -227,7 +236,7 @@ export function RadarForm({
         </p>
       )}
       <Button disabled={busy}>
-        {busy ? "Saving…" : radar ? "Save changes" : "Create radar →"}
+        {t(busy ? "Saving…" : radar ? "Save changes" : "Create radar →")}
       </Button>
     </form>
   );

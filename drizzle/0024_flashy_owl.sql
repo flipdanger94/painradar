@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX "job_one_active_pipeline_idx" ON "job_runs" USING btree ("job") WHERE "job_runs"."job"='daily-radar' and "job_runs"."status" in ('queued','running');

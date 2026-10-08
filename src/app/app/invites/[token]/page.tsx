@@ -1,3 +1,4 @@
+import { Text } from "@/components/language-provider";
 import { ApiButton } from "@/components/actions";
 export default async function Page({
   params,
@@ -7,7 +8,9 @@ export default async function Page({
   const { token } = await params;
   return (
     <section className="panel detail-block">
-      <h1>Join an agency team</h1>
+      <h1>
+        <Text value={"Join an agency team"} />
+      </h1>
       <p>
         This invitation must match your account’s verified email. The owner must
         have an active Agency subscription.

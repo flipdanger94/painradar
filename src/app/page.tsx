@@ -1,3 +1,5 @@
+import { Text } from "@/components/language-provider";
+
 import Link from "next/link";
 import { db, databaseReady } from "@/db";
 import { opportunities } from "@/db/schema";
@@ -34,31 +36,42 @@ export default async function Home() {
       <main>
         <section className="hero">
           <div className="eyebrow">
-            <span className="dot" /> MARKET INTELLIGENCE FOR BUILDERS
+            <span className="dot" />
+            <Text value={"MARKET INTELLIGENCE FOR BUILDERS"} />
           </div>
           <h1>
-            Great products start
+            <Text value={"Great products start"} />
             <br />
-            with a <span>real problem.</span>
+            <Text value={"with a"} />{" "}
+            <span>
+              <Text value={"real problem."} />
+            </span>
           </h1>
           <p className="hero-copy">
-            Find problems worth building. PainRadar analyzes public
-            conversations and finds growing problems people are actively trying
-            to solve.
+            <Text
+              value={
+                "Find problems worth building. PainRadar analyzes public conversations and finds growing problems people are actively trying to solve."
+              }
+            />
           </p>
           <div className="hero-actions">
             <Button asChild>
               <Link href="/signup">
-                Start free <ArrowUpRight size={18} />
+                <Text value={"Start free"} />
+                <ArrowUpRight size={18} />
               </Link>
             </Button>
             <Button asChild variant="outline">
-              <Link href="/app/trending">Explore opportunities →</Link>
+              <Link href="/app/trending">
+                <Text value={"Explore opportunities →"} />
+              </Link>
             </Button>
           </div>
           <p className="hero-note">
-            <Check size={14} /> Evidence-backed insights <span>·</span> No
-            invented demand
+            <Check size={14} />
+            <Text value={"Evidence-backed insights"} />
+            <span>·</span>
+            <Text value={"No invented demand"} />
           </p>
           <div className="radar-visual" aria-hidden="true">
             <div className="orbit o1" />
@@ -71,14 +84,19 @@ export default async function Home() {
             <div className="radar-center">
               <ScanLine size={32} />
             </div>
-            <div className="floating-label label-one">PUBLIC CONVERSATIONS</div>
+            <div className="floating-label label-one">
+              <Text value={"PUBLIC CONVERSATIONS"} />
+            </div>
             <div className="floating-label label-two">
-              <span className="dot" /> Evidence → opportunity
+              <span className="dot" />
+              <Text value={"Evidence → opportunity"} />
             </div>
           </div>
         </section>
         <section className="source-strip">
-          <span>One view. Signals from across the internet.</span>
+          <span>
+            <Text value={"One view. Signals from across the internet."} />
+          </span>
           <div>
             <b>reddit</b>
             <b>
@@ -90,12 +108,19 @@ export default async function Home() {
         <section className="section">
           <div className="section-heading">
             <div>
-              <div className="eyebrow">LESS GUESSWORK. MORE CONVICTION.</div>
-              <h2>Your next idea deserves evidence.</h2>
+              <div className="eyebrow">
+                <Text value={"LESS GUESSWORK. MORE CONVICTION."} />
+              </div>
+              <h2>
+                <Text value={"Your next idea deserves evidence."} />
+              </h2>
             </div>
             <p>
-              Follow the problem from the first complaint to a validated
-              opportunity.
+              <Text
+                value={
+                  "Follow the problem from the first complaint to a validated opportunity."
+                }
+              />
             </p>
           </div>
           <div className="feature-grid">
@@ -119,19 +144,27 @@ export default async function Home() {
               <article className="feature-card" key={f.title}>
                 <span className="step">0{i + 1}</span>
                 <f.icon size={25} />
-                <h3>{f.title}</h3>
-                <p>{f.text}</p>
+                <h3>
+                  <Text value={f.title} />
+                </h3>
+                <p>
+                  <Text value={f.text} />
+                </p>
               </article>
             ))}
           </div>
         </section>
         <section className="section evidence-section" id="how-it-works">
           <div>
-            <div className="eyebrow">EVERY INSIGHT HAS A PAPER TRAIL</div>
+            <div className="eyebrow">
+              <Text value={"EVERY INSIGHT HAS A PAPER TRAIL"} />
+            </div>
             <h2>
-              Read the evidence.
+              <Text value={"Read the evidence."} />
               <br />
-              <span className="muted">Then make your move.</span>
+              <span className="muted">
+                <Text value={"Then make your move."} />
+              </span>
             </h2>
             <p>
               Real conversations, original links, transparent scoring. AI helps
@@ -157,14 +190,21 @@ export default async function Home() {
           <div className="evidence-preview">
             <div className="panel-header">
               <Quote size={18} />
-              <span>EVIDENCE FEED</span>
-              <span className="badge">Live data only</span>
+              <span>
+                <Text value={"EVIDENCE FEED"} />
+              </span>
+              <span className="badge">
+                <Text value={"Live data only"} />
+              </span>
             </div>
             {live.length ? (
               <div>
                 {live.map((o) => (
                   <article className="evidence-card" key={o.slug}>
-                    <span className="badge">{o.confidence} confidence</span>
+                    <span className="badge">
+                      {o.confidence}
+                      <Text value={"confidence"} />
+                    </span>
                     <h3 style={{ marginTop: 14 }}>
                       <Link href={"/opportunities/" + o.slug}>{o.title} ↗</Link>
                     </h3>
@@ -175,26 +215,35 @@ export default async function Home() {
             ) : (
               <div className="empty-evidence">
                 <ScanLine size={38} />
-                <h3>Let the evidence lead.</h3>
+                <h3>
+                  <Text value={"Let the evidence lead."} />
+                </h3>
                 <p>
                   Opportunities appear after connected sources provide enough
                   independent signals. No fabricated examples.
                 </p>
                 <Button asChild variant="outline">
-                  <Link href="/signup">Set up your first radar →</Link>
+                  <Link href="/signup">
+                    <Text value={"Set up your first radar →"} />
+                  </Link>
                 </Button>
               </div>
             )}
             <div className="panel-footer">
-              <span className="dot" /> No claims without sources
+              <span className="dot" />
+              <Text value={"No claims without sources"} />
             </div>
           </div>
         </section>
         <section className="section">
           <div className="section-heading">
             <div>
-              <div className="eyebrow">BUILT FOR YOUR WORKFLOW</div>
-              <h2>From interesting to actionable.</h2>
+              <div className="eyebrow">
+                <Text value={"BUILT FOR YOUR WORKFLOW"} />
+              </div>
+              <h2>
+                <Text value={"From interesting to actionable."} />
+              </h2>
             </div>
           </div>
           <div className="mini-grid">
@@ -217,14 +266,20 @@ export default async function Home() {
               ],
             ].map(([t, d]) => (
               <article key={t}>
-                <h3>{t} ↗</h3>
-                <p>{d}</p>
+                <h3>
+                  <Text value={t} /> ↗
+                </h3>
+                <p>
+                  <Text value={d} />
+                </p>
               </article>
             ))}
           </div>
         </section>
         <section className="section faq">
-          <h2>Good questions.</h2>
+          <h2>
+            <Text value={"Good questions."} />
+          </h2>
           {[
             [
               "Does PainRadar generate startup ideas?",
@@ -245,20 +300,27 @@ export default async function Home() {
           ].map(([q, a]) => (
             <details key={q}>
               <summary>
-                {q}
+                <Text value={q} />
                 <span>+</span>
               </summary>
-              <p>{a}</p>
+              <p>
+                <Text value={a} />
+              </p>
             </details>
           ))}
         </section>
         <section className="final-cta">
-          <div className="eyebrow">YOUR NEXT BUILD STARTS HERE</div>
-          <h2>Build with conviction.</h2>
+          <div className="eyebrow">
+            <Text value={"YOUR NEXT BUILD STARTS HERE"} />
+          </div>
+          <h2>
+            <Text value={"Build with conviction."} />
+          </h2>
           <p>Find the pain. Follow the evidence. Make something people need.</p>
           <Button asChild>
             <Link href="/signup">
-              Start your radar <ArrowUpRight size={18} />
+              <Text value={"Start your radar"} />
+              <ArrowUpRight size={18} />
             </Link>
           </Button>
         </section>

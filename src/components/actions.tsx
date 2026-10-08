@@ -1,4 +1,5 @@
 "use client";
+import { useTranslation } from "./language-provider";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
@@ -17,6 +18,7 @@ export function ApiButton({
   method?: string;
   refresh?: boolean;
 }) {
+  const t = useTranslation();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [ok, setOk] = useState(false);
@@ -47,7 +49,15 @@ export function ApiButton({
           }
         }}
       >
-        {busy ? "Working…" : ok ? "Done ✓" : label}
+        {t(
+          busy
+            ? "Working…"
+            : ok
+              ? endpoint === "/api/admin/collect"
+                ? "Request sent"
+                : "Completed"
+              : label,
+        )}
       </Button>
       {error && (
         <p role="alert" className="error-message">
@@ -66,6 +76,7 @@ export function SaveButton({
   saved?: boolean;
   workspaceId?: string;
 }) {
+  const t = useTranslation();
   const [active, setActive] = useState(saved);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -98,7 +109,7 @@ export function SaveButton({
         }}
       >
         {active ? <Check size={14} /> : <Bookmark size={14} />}{" "}
-        {active ? "Saved" : "Save opportunity"}
+        {t(active ? "Saved" : "Save opportunity")}
       </Button>
       {error && (
         <p className="error-message" role="alert">

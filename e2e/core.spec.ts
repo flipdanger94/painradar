@@ -38,7 +38,9 @@ test("auth form validates locally and displays service errors", async ({
   await page.getByLabel("Email", { exact: true }).fill("fixture@example.test");
   await page.getByLabel("Password", { exact: true }).fill("test-password-123");
   await page.getByRole("button", { name: "Log in", exact: true }).click();
-  await expect(page.getByRole("alert")).toContainText("unavailable");
+  await expect(page.locator(".auth-wrap").getByRole("alert")).toContainText(
+    "Sign-in is not configured yet.",
+  );
 });
 test("account and report setup states retain their page headings", async ({
   page,

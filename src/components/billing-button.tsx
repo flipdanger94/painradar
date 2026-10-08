@@ -1,4 +1,5 @@
 "use client";
+import { useTranslation } from "./language-provider";
 import { billingRedirectUrl } from "@/lib/billing-redirect";
 import { track } from "./analytics";
 import { useState } from "react";
@@ -11,12 +12,13 @@ export function BillingButton({
   plan?: string;
   portal?: boolean;
 }) {
+  const t = useTranslation();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   if (plan === "free")
     return (
       <Button asChild variant="outline">
-        <Link href="/signup">Start free →</Link>
+        <Link href="/signup">{t("Start free →")}</Link>
       </Button>
     );
   return (
@@ -58,10 +60,10 @@ export function BillingButton({
         }}
       >
         {busy
-          ? "Opening…"
+          ? t("Opening…")
           : portal
-            ? "Manage subscription"
-            : "Choose " + plan + " ↗"}
+            ? t("Manage subscription")
+            : t("Choose") + " " + plan + " ↗"}
       </Button>
       {error && (
         <p className="error-message" role="alert">

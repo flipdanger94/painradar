@@ -473,10 +473,19 @@ export const jobRuns = pgTable(
     job: text("job").notNull(),
     status: text("status").notNull(),
     error: text("error"),
+    progress:
+      jsonb("progress").$type<import("@/lib/pipeline-status").JobProgress>(),
     createdAt: created(),
     finishedAt: timestamp("finished_at", { withTimezone: true }),
   },
-  (t) => [index("job_finished_idx").on(t.finishedAt)],
+  (t) => [
+    index("job_finished_idx").on(t.finishedAt),
+    uniqueIndex("job_one_active_pipeline_idx")
+      .on(t.job)
+      .where(
+        sql`${t.job}='daily-radar' and ${t.status} in ('queued','running')`,
+      ),
+  ],
 );
 export const webhookEvents = pgTable("webhook_events", {
   id: text("id").primaryKey(),

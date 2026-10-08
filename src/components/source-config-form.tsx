@@ -1,8 +1,25 @@
 "use client";
+
+import { Text, useTranslation } from "@/components/language-provider";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
-export function SourceConfigForm() {
+export function SourceConfigForm({
+  sources = [],
+}: {
+  sources?: { id: string; enabled: boolean; config: unknown }[];
+}) {
+  const [source, setSource] = useState("hn");
+  const active = sources.find((s) => s.id === source);
+  const config = (active?.config || {}) as {
+    repositories?: string[];
+    keywords?: string[];
+    subreddits?: string[];
+    pageBudget?: number;
+    since?: string;
+  };
+  const t = useTranslation();
   const [error, setError] = useState("");
   const [ok, setOk] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -55,8 +72,15 @@ export function SourceConfigForm() {
       }}
     >
       <div>
-        <label htmlFor="config-source">Source</label>
-        <select id="config-source" name="source">
+        <label htmlFor="config-source">
+          <Text value={"Source"} />
+        </label>
+        <select
+          id="config-source"
+          name="source"
+          value={source}
+          onChange={(e) => setSource(e.target.value)}
+        >
           <option value="hn">Hacker News</option>
           <option value="github">GitHub Issues</option>
           <option value="reddit">Reddit</option>
@@ -64,27 +88,45 @@ export function SourceConfigForm() {
       </div>
       <div>
         <label htmlFor="config-values">
-          Keywords / owner/repository / subreddit names
+          <Text value={"Keywords / owner/repository / subreddit names"} />
         </label>
         <textarea
           id="config-values"
           name="values"
+          key={source + "values"}
+          defaultValue={(
+            config.repositories ||
+            config.subreddits ||
+            config.keywords ||
+            []
+          ).join(", ")}
           required
           maxLength={1600}
-          placeholder="Comma-separated values"
+          placeholder={t("Comma-separated values")}
         />
       </div>
       <div>
-        <label htmlFor="config-since">Backfill start date (optional)</label>
-        <input id="config-since" name="since" type="datetime-local" />
+        <label htmlFor="config-since">
+          <Text value={"Backfill start date (optional)"} />
+        </label>
+        <input
+          id="config-since"
+          name="since"
+          key={source + "since"}
+          defaultValue={config.since?.slice(0, 16)}
+          type="datetime-local"
+        />
         <p className="text-small">
-          Changing configuration restarts collection for the new scopes.
-          Existing records are deduplicated.
+          <Text
+            value={
+              "Changing configuration restarts collection for the new scopes. Existing records are deduplicated."
+            }
+          />
         </p>
       </div>
       <div>
         <label htmlFor="config-budget">
-          Maximum pages per pipeline run (1–10)
+          <Text value={"Maximum pages per pipeline run (1–10)"} />
         </label>
         <input
           id="config-budget"
@@ -92,29 +134,34 @@ export function SourceConfigForm() {
           type="number"
           min={1}
           max={10}
-          defaultValue={3}
+          key={source + "budget"}
+          defaultValue={config.pageBudget || 3}
           required
         />
         <p className="text-small">
-          Unfinished collection resumes on the next run. Provider listing limits
-          still apply.
+          <Text
+            value={
+              "Unfinished collection resumes on the next run. Provider listing limits still apply."
+            }
+          />
         </p>
       </div>
       <label style={{ display: "flex", gap: 10 }}>
         <input
           type="checkbox"
           name="enabled"
-          defaultChecked
+          key={source + "enabled"}
+          defaultChecked={active?.enabled ?? true}
           style={{ width: "auto" }}
         />{" "}
-        Enable collection
+        <Text value={"Enable collection"} />
       </label>
       <Button disabled={busy}>
-        {busy ? "Saving…" : "Save source configuration"}
+        {t(busy ? "Saving…" : "Save source configuration")}
       </Button>
       {ok && (
         <p className="success-message" role="status">
-          Source configured.
+          <Text value={"Source configured."} />
         </p>
       )}
       {error && (

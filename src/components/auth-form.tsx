@@ -1,4 +1,6 @@
 "use client";
+import { Text, useTranslation } from "@/components/language-provider";
+
 import { track } from "./analytics";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -14,6 +16,7 @@ export function AuthForm({
   google: boolean;
   github: boolean;
 }) {
+  const t = useTranslation();
   const router = useRouter();
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
@@ -95,17 +98,21 @@ export function AuthForm({
   }[mode];
   return (
     <div className="auth-wrap">
-      <div className="eyebrow">YOUR INTELLIGENCE WORKSPACE</div>
-      <h1>{title}</h1>
+      <div className="eyebrow">{t("YOUR INTELLIGENCE WORKSPACE")}</div>
+      <h1>{t(title)}</h1>
       <p>
-        {mode === "signup"
-          ? "Create your free PainRadar account."
-          : "Evidence first. Your next opportunity awaits."}
+        {t(
+          mode === "signup"
+            ? "Create your free PainRadar account."
+            : "Evidence first. Your next opportunity awaits.",
+        )}
       </p>
       <form className="form-stack" onSubmit={submit}>
         {mode === "signup" && (
           <div>
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name">
+              <Text value={"Name"} />
+            </label>
             <input
               id="name"
               name="name"
@@ -117,7 +124,9 @@ export function AuthForm({
         )}
         {mode !== "reset" && (
           <div>
-            <label htmlFor="email">Email</label>
+            <label htmlFor="email">
+              <Text value={"Email"} />
+            </label>
             <input
               id="email"
               name="email"
@@ -130,7 +139,9 @@ export function AuthForm({
         )}
         {mode !== "forgot" && (
           <div>
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">
+              <Text value={"Password"} />
+            </label>
             <input
               id="password"
               name="password"
@@ -146,34 +157,38 @@ export function AuthForm({
         )}
         {mode === "login" && (
           <Link className="text-link" href="/forgot-password">
-            Forgot password?
+            <Text value={"Forgot password?"} />
           </Link>
         )}
         {error && (
           <div role="alert" className="error-message">
-            {error}
+            {t(error)}
           </div>
         )}
         {message && (
           <div role="status" className="success-message">
-            {message}
+            {t(message)}
           </div>
         )}
         <Button disabled={busy}>
-          {busy
-            ? "Please wait…"
-            : mode === "signup"
-              ? "Create free account"
-              : mode === "login"
-                ? "Log in"
-                : mode === "forgot"
-                  ? "Send reset link"
-                  : "Reset password"}
+          {t(
+            busy
+              ? "Please wait…"
+              : mode === "signup"
+                ? "Create free account"
+                : mode === "login"
+                  ? "Log in"
+                  : mode === "forgot"
+                    ? "Send reset link"
+                    : "Reset password",
+          )}
         </Button>
       </form>
       {(mode === "login" || mode === "signup") && (google || github) && (
         <>
-          <div className="divider">OR CONTINUE WITH</div>
+          <div className="divider">
+            <Text value={"OR CONTINUE WITH"} />
+          </div>
           <div className="oauth-grid">
             {google && (
               <Button
@@ -199,20 +214,35 @@ export function AuthForm({
       <div className="form-footer">
         {mode === "signup" ? (
           <>
-            Already have an account? <Link href="/login">Log in</Link>
+            <Text value={"Already have an account?"} />{" "}
+            <Link href="/login">
+              <Text value={"Log in"} />
+            </Link>
           </>
         ) : (
           <>
-            New to PainRadar? <Link href="/signup">Start free</Link>
+            <Text value={"New to PainRadar?"} />{" "}
+            <Link href="/signup">
+              <Text value={"Start free"} />
+            </Link>
           </>
         )}
       </div>
       <div className="form-footer">
-        <Link href="/verify-email">Resend verification email</Link>
+        <Link href="/verify-email">
+          <Text value={"Resend verification email"} />
+        </Link>
       </div>
       <p className="auth-fineprint">
-        By continuing, you agree to our <Link href="/terms">Terms</Link> and{" "}
-        <Link href="/privacy">Privacy notice</Link>.
+        By continuing, you agree to our{" "}
+        <Link href="/terms">
+          <Text value={"Terms"} />
+        </Link>{" "}
+        and{" "}
+        <Link href="/privacy">
+          <Text value={"Privacy notice"} />
+        </Link>
+        .
       </p>
     </div>
   );

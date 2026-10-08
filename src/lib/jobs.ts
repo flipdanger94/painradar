@@ -16,7 +16,10 @@ import {
   PIPELINE_LIMITS,
   planAnalysisBatch,
   commitAnalysisBatch,
+  planGroupingBatch,
+  commitGroupingBatch,
 } from "./analysis-batches";
+import { recordProgress } from "./pipeline-status";
 import { Inngest } from "inngest";
 import { embeddingModel, freeTier } from "./gemini";
 import { db } from "@/db";
@@ -43,18 +46,34 @@ export const dailyPipeline = inngest.createFunction(
           error: "Background pipeline exhausted retries",
           finishedAt: new Date(),
         })
-        .where(eq(jobRuns.id, event.data.event.id || ""));
+        .where(
+          eq(
+            jobRuns.id,
+            event.data.event.data.jobId || event.data.event.id || "",
+          ),
+        );
     },
   },
   [{ cron: "0 3 * * *" }, { event: "painradar/collect.requested" }],
   async ({ step, event }) => {
-    const jobId = event.id || crypto.randomUUID();
-    await step.run("start", async () =>
-      db()
+    const jobId = event.data.jobId || event.id || crypto.randomUUID();
+    const started = await step.run("start", async () => {
+      if (event.data.jobId) {
+        const r = await db()
+          .update(jobRuns)
+          .set({ status: "running" })
+          .where(and(eq(jobRuns.id, jobId), eq(jobRuns.status, "queued")))
+          .returning();
+        return r.length > 0;
+      }
+      const r = await db()
         .insert(jobRuns)
         .values({ id: jobId, job: "daily-radar", status: "running" })
-        .onConflictDoNothing(),
-    );
+        .onConflictDoNothing()
+        .returning();
+      return r.length > 0;
+    });
+    if (!started) return { skipped: true };
     const ids = await step.run("sources", async () => {
       await db()
         .insert(sources)
@@ -79,7 +98,13 @@ export const dailyPipeline = inngest.createFunction(
         ),
       }));
     });
-    for (const source of ids)
+    await step.run("progress-collect", () =>
+      recordProgress(jobId, "collect", 0, ids.length),
+    );
+    for (const [sourceIndex, source] of (event.data.collectSources === false
+      ? []
+      : ids
+    ).entries()) {
       for (let page = 0; page < source.pageBudget; page++) {
         const result = await step.run(
           "collectSource-" + source.id + "-page-" + page,
@@ -92,6 +117,10 @@ export const dailyPipeline = inngest.createFunction(
         )
           break;
       }
+      await step.run("progress-source-" + source.id, () =>
+        recordProgress(jobId, "collect", sourceIndex + 1, ids.length),
+      );
+    }
     const pendingEmbeddings = await step.run("pending-embeddings", async () =>
       db()
         .select({ id: rawSignals.id })
@@ -106,46 +135,72 @@ export const dailyPipeline = inngest.createFunction(
         .orderBy(rawSignals.discoveredAt)
         .limit(PIPELINE_LIMITS.embeddings),
     );
-    for (const signal of pendingEmbeddings) {
+    await step.run("progress-embed", () =>
+      recordProgress(jobId, "embed", 0, pendingEmbeddings.length),
+    );
+    for (const [index, signal] of pendingEmbeddings.entries()) {
       if (freeTier()) await step.sleep("embedding-quota-" + signal.id, "13s");
       await step.run("createEmbeddings-" + signal.id, () =>
-        pipeline.createEmbeddings(jobId, signal.id),
+        (async () => {
+          const result = await pipeline.createEmbeddings(jobId, signal.id);
+          await recordProgress(
+            jobId,
+            "embed",
+            index + 1,
+            pendingEmbeddings.length,
+          );
+          return result;
+        })(),
       );
     }
     await step.run("deduplicateSignals", () => pipeline.deduplicateSignals());
-    const pendingClusters = await step.run("pending-clusters", async () =>
-      db()
-        .select({ id: rawSignals.id })
-        .from(rawSignals)
-        .where(
-          and(
-            isNull(rawSignals.processedAt),
-            isNull(rawSignals.duplicateOf),
-            sql`${rawSignals.embedding} is not null`,
-            eq(rawSignals.embeddingModel, embeddingModel()),
-          ),
-        )
-        .orderBy(rawSignals.discoveredAt)
-        .limit(PIPELINE_LIMITS.seeds),
+    const grouping = await step.run("pending-clusters", () =>
+      planGroupingBatch(),
     );
-    for (const signal of pendingClusters) {
+    const pendingClusters = grouping.ids.map((id) => ({ id }));
+    await step.run("progress-group", () =>
+      recordProgress(jobId, "group", 0, pendingClusters.length),
+    );
+    for (const [index, signal] of pendingClusters.entries()) {
       if (freeTier()) await step.sleep("analysis-quota-" + signal.id, "13s");
       await step.run("clusterSignals-" + signal.id, () =>
-        pipeline.clusterSignalsJob(jobId, signal.id),
+        (async () => {
+          const result = await pipeline.clusterSignalsJob(jobId, signal.id);
+          await recordProgress(
+            jobId,
+            "group",
+            index + 1,
+            pendingClusters.length,
+          );
+          return result;
+        })(),
       );
     }
+    await step.run("commit-grouping-batch", () =>
+      commitGroupingBatch(grouping.previous, grouping.next),
+    );
     const batch = await step.run("analysis-batch", () => planAnalysisBatch());
-    for (const id of batch.ids) {
+    await step.run("progress-analyze", () =>
+      recordProgress(jobId, "analyze", 0, batch.ids.length),
+    );
+    for (const [index, id] of batch.ids.entries()) {
       if (freeTier()) await step.sleep("cluster-analysis-quota-" + id, "13s");
       await step.run("analyzeClusters-" + id, () =>
         pipeline.analyzeClusters(jobId, id),
       );
       await step.run("calculateScores-" + id, () =>
-        pipeline.calculateScores(id),
+        (async () => {
+          const result = await pipeline.calculateScores(id);
+          await recordProgress(jobId, "analyze", index + 1, batch.ids.length);
+          return result;
+        })(),
       );
     }
     await step.run("commit-analysis-batch", () =>
       commitAnalysisBatch(batch.previous, batch.next),
+    );
+    await step.run("progress-publish", () =>
+      recordProgress(jobId, "publish", 0, 1),
     );
     await step.run("updateTrends", () => pipeline.updateTrends());
     const day = await step.run("publication-day", () =>
@@ -159,7 +214,16 @@ export const dailyPipeline = inngest.createFunction(
     await step.run("finish", () =>
       db()
         .update(jobRuns)
-        .set({ status: "completed", finishedAt: new Date() })
+        .set({
+          status: "completed",
+          finishedAt: new Date(),
+          progress: {
+            stage: "done",
+            done: 1,
+            total: 1,
+            updatedAt: new Date().toISOString(),
+          },
+        })
         .where(eq(jobRuns.id, jobId)),
     );
     return { jobId };

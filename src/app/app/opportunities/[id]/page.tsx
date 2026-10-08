@@ -1,3 +1,5 @@
+import { Text } from "@/components/language-provider";
+
 import { requireWorkspace } from "@/lib/tenancy";
 import { workspaceSaved } from "@/lib/workspace-data";
 import { TrackEvent } from "@/components/track-event";
@@ -133,16 +135,24 @@ export default async function Page({
         <div>
           <section className="panel detail-block">
             <span className="badge">AI inference · linked evidence below</span>
-            <h2 style={{ marginTop: 20 }}>The problem</h2>
+            <h2 style={{ marginTop: 20 }}>
+              <Text value={"The problem"} />
+            </h2>
             <p>{o.summary}</p>
-            <h2>Who experiences it?</h2>
+            <h2>
+              <Text value={"Who experiences it?"} />
+            </h2>
             <p>{o.audience}</p>
-            <h2>Observed growth</h2>
+            <h2>
+              <Text value={"Observed growth"} />
+            </h2>
             <GrowthChart rows={history} />
           </section>
           <section className="panel">
             <div className="panel-title">
-              <h2>Evidence</h2>
+              <h2>
+                <Text value={"Evidence"} />
+              </h2>
               <span className="badge">FACTS · ORIGINAL SOURCES</span>
             </div>
             {signals.map((s) => (
@@ -168,13 +178,17 @@ export default async function Page({
           </section>
           <section className="panel detail-block">
             <span className="badge">AI inference</span>
-            <h2 style={{ marginTop: 18 }}>Commercial intent</h2>
+            <h2 style={{ marginTop: 18 }}>
+              <Text value={"Commercial intent"} />
+            </h2>
             <p>
               {typeof a.commercialIntent === "string"
                 ? a.commercialIntent
                 : "Not enough evidence yet."}
             </p>
-            <h2>Existing workarounds</h2>
+            <h2>
+              <Text value={"Existing workarounds"} />
+            </h2>
             {workarounds.length ? (
               workarounds.map((w, i) => (
                 <div key={i}>
@@ -189,14 +203,18 @@ export default async function Page({
                 </div>
               ))
             ) : (
-              <p>Not enough evidence yet.</p>
+              <p>
+                <Text value={"Not enough evidence yet."} />
+              </p>
             )}
           </section>
           <section className="panel detail-block">
             <span className="badge">
               RESEARCH LEADS · NOT VERIFIED COMPETITORS
             </span>
-            <h2 style={{ marginTop: 18 }}>Existing solutions</h2>
+            <h2 style={{ marginTop: 18 }}>
+              <Text value={"Existing solutions"} />
+            </h2>
             {competitors.length ? (
               competitors.map((c) => (
                 <p key={c.url}>
@@ -214,7 +232,7 @@ export default async function Page({
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    Source
+                    <Text value={"Source"} />
                   </a>
                   <br />
                   Pricing, positioning, advantages and complaints: Not enough
@@ -239,7 +257,9 @@ export default async function Page({
               Live competitor web research is unavailable in this Gemini
               configuration. Existing cited research remains available.
             </p>
-            <h2>Market gap</h2>
+            <h2>
+              <Text value={"Market gap"} />
+            </h2>
             <MarketGap results={researched?.results || []} />
             {researched && (
               <p className="text-small">
@@ -252,7 +272,9 @@ export default async function Page({
         </div>
         <aside>
           <section className="panel detail-block">
-            <h2>Score breakdown</h2>
+            <h2>
+              <Text value={"Score breakdown"} />
+            </h2>
             {Object.entries(o.components as Record<string, number | null>).map(
               ([k, v]) => (
                 <div
@@ -272,7 +294,9 @@ export default async function Page({
           </section>
           <section className="panel detail-block">
             <span className="badge">HYPOTHESIS · REQUIRES VALIDATION</span>
-            <h2 style={{ marginTop: 18 }}>Your first MVP</h2>
+            <h2 style={{ marginTop: 18 }}>
+              <Text value={"Your first MVP"} />
+            </h2>
             {o.mvp && ["founder", "agency"].includes(plan) ? (
               Object.entries(o.mvp)
                 .filter(([k]) => k !== "evidenceIds")
@@ -295,7 +319,9 @@ export default async function Page({
             )}
           </section>
           <section className="panel detail-block">
-            <h2>Source distribution</h2>
+            <h2>
+              <Text value={"Source distribution"} />
+            </h2>
             {Object.entries(
               signals.reduce<Record<string, number>>(
                 (m, s) => ({ ...m, [s.source]: (m[s.source] || 0) + 1 }),
@@ -306,11 +332,15 @@ export default async function Page({
                 {s}: {c} displayed signals
               </p>
             ))}
-            <h2>Risks</h2>
+            <h2>
+              <Text value={"Risks"} />
+            </h2>
             {Array.isArray(a.risks) ? (
               a.risks.map((r, i) => <p key={i}>{String(r)}</p>)
             ) : (
-              <p>Not enough evidence yet.</p>
+              <p>
+                <Text value={"Not enough evidence yet."} />
+              </p>
             )}
           </section>
         </aside>

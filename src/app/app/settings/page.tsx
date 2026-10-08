@@ -1,3 +1,5 @@
+import { Text } from "@/components/language-provider";
+
 import { formatStripeInvoiceAmount } from "@/lib/stripe-amount";
 import { TrackEvent } from "@/components/track-event";
 import { eq, desc, and, isNull, sql } from "drizzle-orm";
@@ -20,7 +22,9 @@ export default async function Page({
     return (
       <>
         <div className="page-title">
-          <h1>Settings & billing</h1>
+          <h1>
+            <Text value={"Settings & billing"} />
+          </h1>
         </div>
         <EmptyState
           title="Your account settings"
@@ -64,7 +68,9 @@ export default async function Page({
         )}
       <div className="page-title">
         <div>
-          <h1>Settings & billing</h1>
+          <h1>
+            <Text value={"Settings & billing"} />
+          </h1>
           <p>Your account, subscription, and API access.</p>
         </div>
       </div>
@@ -75,7 +81,9 @@ export default async function Page({
       />
       <div className="settings-grid">
         <section className="panel detail-block">
-          <h2>Subscription</h2>
+          <h2>
+            <Text value={"Subscription"} />
+          </h2>
           <p>
             {sub?.plan || "Free"} · {sub?.status || "No paid subscription"}
           </p>
@@ -85,7 +93,9 @@ export default async function Page({
           <BillingButton portal />
         </section>
         <section className="panel detail-block">
-          <h2>API keys</h2>
+          <h2>
+            <Text value={"API keys"} />
+          </h2>
           <p className="text-small">
             Founder subscription required. Keys are stored as SHA-256 hashes and
             displayed only once.
@@ -112,7 +122,9 @@ export default async function Page({
         </section>
       </div>
       <section className="panel detail-block">
-        <h2>Invoices</h2>
+        <h2>
+          <Text value={"Invoices"} />
+        </h2>
         {bills.length ? (
           bills.map((i) => (
             <div className="report-row" key={i.id}>

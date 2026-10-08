@@ -1,3 +1,4 @@
+import { Text } from "@/components/language-provider";
 import { eq, and, isNull } from "drizzle-orm";
 import { db } from "@/db";
 import { radars, radarKeywords } from "@/db/schema";
@@ -18,7 +19,9 @@ export default async function Page() {
       <div className="page-title">
         <div>
           <div className="eyebrow">YOUR NICHE. YOUR SIGNAL.</div>
-          <h1>Custom radars</h1>
+          <h1>
+            <Text value={"Custom radars"} />
+          </h1>
           <p>
             Monitor opportunities by keywords, audience, source, and language.
           </p>
@@ -44,7 +47,9 @@ export default async function Page() {
                       {r.sources.join(", ")} · {r.languages.join(", ")}
                     </p>
                     <details style={{ marginBlock: 16 }}>
-                      <summary>Edit radar</summary>
+                      <summary>
+                        <Text value={"Edit radar"} />
+                      </summary>
                       <RadarForm
                         radar={{
                           ...r,
@@ -72,7 +77,9 @@ export default async function Page() {
           )}
         </div>
         <section className="panel detail-block">
-          <h2>Create a radar</h2>
+          <h2>
+            <Text value={"Create a radar"} />
+          </h2>
           <RadarForm />
         </section>
       </div>

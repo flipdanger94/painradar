@@ -1,3 +1,5 @@
+import { Text } from "@/components/language-provider";
+
 import { marketGap, solutionFitSchema } from "@/lib/market-gap";
 
 export function MarketGap({ results }: { results: Record<string, unknown>[] }) {
@@ -70,11 +72,17 @@ export function CompetitorResults({
                 </a>
               </h3>
               {renderClaim(r.description as Claim)}
-              <h3 className="text-small">Pricing</h3>
+              <h3 className="text-small">
+                <Text value={"Pricing"} />
+              </h3>
               {renderClaim(r.pricing as Claim | null)}
-              <h3 className="text-small">Positioning</h3>
+              <h3 className="text-small">
+                <Text value={"Positioning"} />
+              </h3>
               {renderClaim(r.positioning as Claim | null)}
-              <h3 className="text-small">Fit for this pain · AI inference</h3>
+              <h3 className="text-small">
+                <Text value={"Fit for this pain · AI inference"} />
+              </h3>
               {fit.success ? (
                 <div>
                   <p>Coverage: {fit.data.coverage}</p>
@@ -106,7 +114,9 @@ export function CompetitorResults({
                   pain.
                 </p>
               )}
-              <h3 className="text-small">Reported advantages</h3>
+              <h3 className="text-small">
+                <Text value={"Reported advantages"} />
+              </h3>
               {Array.isArray(r.advantages) && r.advantages.length ? (
                 r.advantages.map((c, i) => (
                   <div key={i}>{renderClaim(c as Claim)}</div>
@@ -114,7 +124,9 @@ export function CompetitorResults({
               ) : (
                 <p>Not enough data.</p>
               )}
-              <h3 className="text-small">Reported complaints</h3>
+              <h3 className="text-small">
+                <Text value={"Reported complaints"} />
+              </h3>
               {Array.isArray(r.complaints) && r.complaints.length ? (
                 r.complaints.map((c, i) => (
                   <div key={i}>{renderClaim(c as Claim)}</div>

@@ -1,4 +1,10 @@
 "use client";
+import {
+  Text,
+  LanguageSwitcher,
+  useTranslation,
+} from "@/components/language-provider";
+
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -50,6 +56,7 @@ export function AppShell({
   admin: boolean;
   configured: boolean;
 }) {
+  const t = useTranslation();
   const path = usePathname();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -146,7 +153,9 @@ export function AppShell({
           <X size={20} />
         </button>
         <Brand />
-        <div className="nav-label">WORKSPACE</div>
+        <div className="nav-label">
+          <Text value={"WORKSPACE"} />
+        </div>
         {links.map(([href, title, Icon]) => (
           <Link
             className={`side-link ${path === href ? "active" : ""}`}
@@ -155,7 +164,7 @@ export function AppShell({
             onClick={() => setOpen(false)}
           >
             <Icon />
-            {title}
+            <Text value={title} />
           </Link>
         ))}
         {admin && (
@@ -165,16 +174,25 @@ export function AppShell({
             onClick={() => setOpen(false)}
           >
             <Shield />
-            Administration
+            <Text value={"Administration"} />
           </Link>
         )}
         <div className="side-bottom">
           <div className="plan-box">
-            <strong>Go deeper. Build smarter.</strong>
-            <p>More radars, longer history, and actionable intelligence.</p>
+            <strong>
+              <Text value={"Go deeper. Build smarter."} />
+            </strong>
+            <p>
+              <Text
+                value={
+                  "More radars, longer history, and actionable intelligence."
+                }
+              />
+            </p>
             <Button asChild size="sm">
               <Link href="/pricing">
-                Explore plans <ArrowUpRight size={13} />
+                <Text value={"Explore plans"} />
+                <ArrowUpRight size={13} />
               </Link>
             </Button>
           </div>
@@ -194,7 +212,8 @@ export function AppShell({
                   }
                 }}
               >
-                <LogOut size={13} /> Log out
+                <LogOut size={13} />
+                <Text value={"Log out"} />
               </Button>
               {error && (
                 <p role="alert" className="error-message">
@@ -204,16 +223,19 @@ export function AppShell({
             </>
           ) : (
             <Button asChild variant="outline" size="sm">
-              <Link href="/login">Log in to your workspace</Link>
+              <Link href="/login">
+                <Text value={"Log in to your workspace"} />
+              </Link>
             </Button>
           )}
         </div>
       </aside>
       <div className="workspace" inert={drawerOpen}>
         <header className="workspace-header">
+          <LanguageSwitcher />
           <button
             className="mobile-menu"
-            aria-label={open ? "Close navigation" : "Open navigation"}
+            aria-label={t(open ? "Close navigation" : "Open navigation")}
             aria-expanded={drawerOpen}
             aria-controls="workspace-navigation"
             onClick={() => setOpen(!open)}
@@ -229,8 +251,8 @@ export function AppShell({
           >
             <Search size={17} className="muted" />
             <input
-              aria-label="Search opportunities"
-              placeholder="Search problems, industries, audiences…"
+              aria-label={t("Search opportunities")}
+              placeholder={t("Search problems, industries, audiences…")}
               value={q}
               onChange={(e) => setQ(e.target.value)}
               maxLength={200}
@@ -238,18 +260,20 @@ export function AppShell({
           </form>
           <div className="header-status">
             <span className="dot" />
-            {configured ? "Evidence-first workspace" : "Setup required"}
+            {t(configured ? "Evidence-first workspace" : "Setup required")}
           </div>
-          <Link href="/app/notifications" aria-label="Notifications">
+          <Link href="/app/notifications" aria-label={t("Notifications")}>
             <Bell size={17} className="muted" />
           </Link>
         </header>
         <main className="workspace-content">
           {!configured && (
             <div className="notice">
-              Data services are not connected yet. This workspace contains no
-              simulated opportunities. Connect PostgreSQL and configure source
-              collection to start.
+              <Text
+                value={
+                  "Data services are not connected yet. This workspace contains no simulated opportunities. Connect PostgreSQL and configure source collection to start."
+                }
+              />
             </div>
           )}
           {children}
