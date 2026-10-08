@@ -1,0 +1,153 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1791189870138,
+      "tag": "0000_aberrant_brother_voodoo",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791190034506,
+      "tag": "0001_integrity-and-search",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791190240796,
+      "tag": "0002_curly_toxin",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1791190612044,
+      "tag": "0003_complex_tinkerer",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1791211011072,
+      "tag": "0004_dashing_warlock",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1791211040191,
+      "tag": "0005_superb_vertigo",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1791211040827,
+      "tag": "0006_tenant-permissions",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1791212225658,
+      "tag": "0007_webhook-delivery-claims",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1791213033626,
+      "tag": "0008_source-collection-state",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1791213409169,
+      "tag": "0009_opportunity-keyset-index",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1791272655707,
+      "tag": "0010_publication-queue",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1791272660689,
+      "tag": "0011_bounded-publication-functions",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1791278763090,
+      "tag": "0012_subscription-history",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1791278764432,
+      "tag": "0013_subscription-sync-functions",
+      "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1791283377842,
+      "tag": "0014_billing-reconciliation",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1791283379215,
+      "tag": "0015_billing-reconciliation-functions",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "7",
+      "when": 1791359241474,
+      "tag": "0016_industry-taxonomy",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "7",
+      "when": 1791371110991,
+      "tag": "0017_data-maintenance",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "7",
+      "when": 1791371169916,
+      "tag": "0018_data-maintenance-functions",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "7",
+      "when": 1791372370515,
+      "tag": "0019_invoice-sync",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "7",
+      "when": 1791373641662,
+      "tag": "0020_invoice-reconciliation",
+      "breakpoints": true
+    }
+  ]
+}

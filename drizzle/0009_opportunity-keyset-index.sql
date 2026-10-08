@@ -1,0 +1,1 @@
+CREATE INDEX "opportunity_page_idx" ON "opportunities" USING btree ("score" DESC NULLS LAST,"id");

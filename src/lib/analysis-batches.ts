@@ -1,0 +1,39 @@
+import { sql } from "drizzle-orm";
+import { db } from "@/db";
+export const PIPELINE_LIMITS = {
+  embeddings: 200,
+  seeds: 200,
+  analysis: 200,
+  publicationClaims: 5,
+  publicationPages: 20,
+  publicationPageSize: 100,
+} as const;
+export async function planAnalysisBatch() {
+  await db().execute(
+    sql`insert into pipeline_cursors(id) values('analysis') on conflict do nothing`,
+  );
+  const progress = await db().execute(
+    sql`select cursor from pipeline_cursors where id='analysis'`,
+  );
+  const previous = progress.rows[0]?.cursor
+    ? String(progress.rows[0].cursor)
+    : null;
+  let rows = await db().execute(
+    sql`select id from pain_clusters where (${previous}::uuid is null or id>${previous}::uuid) order by id limit ${PIPELINE_LIMITS.analysis}`,
+  );
+  if (!rows.rows.length && previous)
+    rows = await db().execute(
+      sql`select id from pain_clusters order by id limit ${PIPELINE_LIMITS.analysis}`,
+    );
+  const ids = rows.rows.map((r) => String(r.id));
+  return { previous, ids, next: ids.at(-1) || null };
+}
+export async function commitAnalysisBatch(
+  previous: string | null,
+  next: string | null,
+) {
+  const r = await db().execute(
+    sql`update pipeline_cursors set cursor=${next}::uuid,updated_at=now() where id='analysis' and cursor is not distinct from ${previous}::uuid returning id`,
+  );
+  return r.rows.length > 0;
+}
