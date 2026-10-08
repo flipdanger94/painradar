@@ -191,6 +191,7 @@ export async function clusterSignalsJob(jobId: string, signalId?: string) {
     .where(
       and(
         isNull(rawSignals.processedAt),
+        isNull(rawSignals.retiredAt),
         isNull(rawSignals.duplicateOf),
         sql`${rawSignals.embedding} is not null`,
         eq(rawSignals.embeddingModel, embeddingModel()),
@@ -223,7 +224,7 @@ export async function clusterSignalsJob(jobId: string, signalId?: string) {
       continue;
     }
     const similar = await db().execute(
-      sql`select s.* from raw_signals s where s.duplicate_of is null and s.processed_at is null and s.embedding is not null and s.embedding_model=${seed.embeddingModel} and s.embedding <=> ${v}::vector < 0.18 and not exists(select 1 from cluster_signals cs where cs.signal_id=s.id) order by s.embedding <=> ${v}::vector limit 40`,
+      sql`select s.* from raw_signals s where s.retired_at is null and s.duplicate_of is null and s.processed_at is null and s.embedding is not null and s.embedding_model=${seed.embeddingModel} and s.embedding <=> ${v}::vector < 0.18 and not exists(select 1 from cluster_signals cs where cs.signal_id=s.id) order by s.embedding <=> ${v}::vector limit 40`,
     );
     const authors = new Set(
       similar.rows.map((r) => String(r.source) + ":" + String(r.author)),

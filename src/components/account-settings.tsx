@@ -1,4 +1,6 @@
 "use client";
+import { Text } from "@/components/language-provider";
+
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
@@ -134,7 +136,9 @@ export function AccountSettings({
 
   return (
     <section className="panel detail-block account-settings">
-      <h2>Your account</h2>
+      <h2>
+        <Text value={"Your account"} />
+      </h2>
       <p className="wrap">
         {email} · {verified ? "Email verified" : "Email not verified"}
       </p>
@@ -144,7 +148,9 @@ export function AccountSettings({
           onSubmit={(event) => void submit(event, "profile")}
         >
           <div>
-            <label htmlFor="account-name">Display name</label>
+            <label htmlFor="account-name">
+              <Text value={"Display name"} />
+            </label>
             <input
               id="account-name"
               name="name"
@@ -163,7 +169,9 @@ export function AccountSettings({
           onSubmit={(event) => void submit(event, "password")}
         >
           <div>
-            <label htmlFor="current-password">Current password</label>
+            <label htmlFor="current-password">
+              <Text value={"Current password"} />
+            </label>
             <input
               id="current-password"
               name="currentPassword"
@@ -174,7 +182,9 @@ export function AccountSettings({
             />
           </div>
           <div>
-            <label htmlFor="new-password">New password</label>
+            <label htmlFor="new-password">
+              <Text value={"New password"} />
+            </label>
             <input
               id="new-password"
               name="newPassword"
@@ -186,7 +196,9 @@ export function AccountSettings({
             />
           </div>
           <div>
-            <label htmlFor="confirm-password">Confirm new password</label>
+            <label htmlFor="confirm-password">
+              <Text value={"Confirm new password"} />
+            </label>
             <input
               id="confirm-password"
               name="confirmPassword"
@@ -219,7 +231,9 @@ export function AccountSettings({
         )}
       </div>
       <div className="section-rule">
-        <h2>Active sessions</h2>
+        <h2>
+          <Text value={"Active sessions"} />
+        </h2>
         <p className="text-small">
           Up to 100 active sessions, newest first. End access on a device you no
           longer use.

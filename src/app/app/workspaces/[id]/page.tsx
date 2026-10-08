@@ -1,3 +1,4 @@
+import { Text } from "@/components/language-provider";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { eq, desc, sql, and, isNull, inArray } from "drizzle-orm";
@@ -99,7 +100,9 @@ export default async function Page({
         </div>
       </div>
       <section className="panel detail-block">
-        <h2>Shared watchlist</h2>
+        <h2>
+          <Text value={"Shared watchlist"} />
+        </h2>
         <p>
           Open any opportunity with this workspace selected to add it for the
           client.
@@ -120,7 +123,9 @@ export default async function Page({
         {!saved.length && <EmptyState title="No saved opportunities yet" />}
       </section>
       <section className="panel detail-block">
-        <h2>Client radars</h2>
+        <h2>
+          <Text value={"Client radars"} />
+        </h2>
         {rs.map((r) => (
           <div key={r.id}>
             <div className="report-row">
@@ -138,7 +143,9 @@ export default async function Page({
             </div>
             {edit && (
               <details style={{ marginBlock: 16 }}>
-                <summary>Edit radar</summary>
+                <summary>
+                  <Text value={"Edit radar"} />
+                </summary>
                 <RadarForm
                   workspaceId={id}
                   radar={{
@@ -155,7 +162,9 @@ export default async function Page({
         {edit && <RadarForm workspaceId={id} />}
       </section>
       <section className="panel detail-block">
-        <h2>Client reports</h2>
+        <h2>
+          <Text value={"Client reports"} />
+        </h2>
         <p>
           Snapshots contain up to 500 of this client’s saved opportunities,
           ranked by score. Exports use the client brand and include evidence
@@ -184,7 +193,9 @@ export default async function Page({
       </section>
       {edit && (
         <section className="panel detail-block">
-          <h2>Workspace API keys</h2>
+          <h2>
+            <Text value={"Workspace API keys"} />
+          </h2>
           <p>
             These keys return only opportunities saved in this client workspace.
             Keys stop working when their creator loses workspace access.
@@ -208,7 +219,9 @@ export default async function Page({
       {w.role === "admin" && (
         <>
           <section className="panel detail-block">
-            <h2>Outbound webhooks</h2>
+            <h2>
+              <Text value={"Outbound webhooks"} />
+            </h2>
             <p>
               HTTPS delivery of radar changes, competitor research and report
               events. The signing secret is shown once. Receivers must validate
@@ -239,7 +252,9 @@ export default async function Page({
                 )}
               </div>
             ))}
-            <h3>Recent deliveries</h3>
+            <h3>
+              <Text value={"Recent deliveries"} />
+            </h3>
             {deliveries.map((d) => (
               <p className="text-small wrap" key={String(d.id)}>
                 {String(d.name)} · {String(d.status)} · {String(d.attempts)}{" "}
@@ -248,7 +263,9 @@ export default async function Page({
             ))}
           </section>
           <section className="panel detail-block">
-            <h2>Branding</h2>
+            <h2>
+              <Text value={"Branding"} />
+            </h2>
             <TeamForm
               endpoint={"/api/workspaces/" + id}
               method="PATCH"
@@ -275,7 +292,9 @@ export default async function Page({
             />
           </section>
           <section className="panel detail-block">
-            <h2>Assign team members</h2>
+            <h2>
+              <Text value={"Assign team members"} />
+            </h2>
             <p>
               Team administrators already have access. Assign other members to
               this client as editors or viewers.

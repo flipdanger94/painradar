@@ -1,3 +1,4 @@
+import { Text } from "./language-provider";
 import { ScanLine } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
@@ -13,11 +14,17 @@ export function EmptyState({
   return (
     <div className="empty-state">
       <ScanLine size={36} />
-      <h2>{title}</h2>
-      <p>{description}</p>
+      <h2>
+        <Text value={title} />
+      </h2>
+      <p>
+        <Text value={description} />
+      </p>
       {action && (
         <Button asChild variant="outline">
-          <Link href={action.href}>{action.label} →</Link>
+          <Link href={action.href}>
+            <Text value={action.label} /> →
+          </Link>
         </Button>
       )}
     </div>

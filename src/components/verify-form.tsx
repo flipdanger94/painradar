@@ -1,4 +1,6 @@
 "use client";
+import { Text } from "@/components/language-provider";
+
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "./ui/button";
@@ -31,7 +33,9 @@ export function VerifyForm() {
       }}
     >
       <div>
-        <label htmlFor="verify-email">Email</label>
+        <label htmlFor="verify-email">
+          <Text value={"Email"} />
+        </label>
         <input
           id="verify-email"
           name="email"

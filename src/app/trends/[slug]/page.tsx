@@ -1,3 +1,4 @@
+import { Text } from "@/components/language-provider";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { eq } from "drizzle-orm";
@@ -50,7 +51,8 @@ export default async function Page({
                   <Link href={"/opportunities/" + o.slug}>{o.title} ↗</Link>
                 </h3>
                 <p>
-                  {o.mentions} observed signals · {o.confidence} confidence
+                  {o.mentions} observed signals · {o.confidence}
+                  <Text value={"confidence"} />
                 </p>
               </article>
             ))}

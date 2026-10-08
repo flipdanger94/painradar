@@ -1,3 +1,4 @@
+import { Text } from "@/components/language-provider";
 import { getSession } from "@/lib/auth";
 import { savedOpportunities } from "@/lib/queries";
 import { OpportunityCard } from "@/components/opportunity-card";
@@ -11,7 +12,9 @@ export default async function Page() {
       <div className="page-title">
         <div>
           <div className="eyebrow">KEEP THE RIGHT PROBLEMS CLOSE</div>
-          <h1>Your watchlist</h1>
+          <h1>
+            <Text value={"Your watchlist"} />
+          </h1>
           <p>Score changes are compared with your last opportunity view.</p>
         </div>
       </div>

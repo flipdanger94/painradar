@@ -1,3 +1,4 @@
+import { Text } from "@/components/language-provider";
 import Link from "next/link";
 import { desc, and, sql, count, getTableColumns } from "drizzle-orm";
 import { db } from "@/db";
@@ -63,7 +64,9 @@ export default async function Page({
     <>
       <div className="page-title">
         <div>
-          <h1>Notifications</h1>
+          <h1>
+            <Text value={"Notifications"} />
+          </h1>
           <p>New opportunities and changes in the problems you track.</p>
         </div>
       </div>
@@ -74,7 +77,7 @@ export default async function Page({
             href={base}
             aria-current={!unread ? "page" : undefined}
           >
-            All
+            <Text value={"All"} />
           </Link>
           <Link
             className="button button-outline"

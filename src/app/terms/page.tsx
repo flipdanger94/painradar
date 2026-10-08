@@ -1,9 +1,12 @@
+import { Text } from "@/components/language-provider";
 import { PublicShell } from "@/components/public-shell";
 export default function Page() {
   return (
     <PublicShell>
       <main className="content-page legal">
-        <h1>Pre-launch terms</h1>
+        <h1>
+          <Text value={"Pre-launch terms"} />
+        </h1>
         <div className="notice">
           Pre-launch document — operator details required before public release.
         </div>

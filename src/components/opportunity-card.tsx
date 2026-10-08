@@ -1,3 +1,4 @@
+import { Text } from "@/components/language-provider";
 import Link from "next/link";
 import type { Opportunity } from "@/lib/queries";
 export function OpportunityCard({
@@ -29,7 +30,9 @@ export function OpportunityCard({
       <h3>{o.title}</h3>
       <p>{o.summary}</p>
       <div className="card-meta">
-        <span>{o.mentions} signals</span>
+        <span>
+          {o.mentions} <Text value="Signals" />
+        </span>
         <span
           className={o.growth7d !== null && o.growth7d < 0 ? "red" : "growth"}
         >
@@ -37,12 +40,18 @@ export function OpportunityCard({
             ? "Growth: not enough history"
             : `${o.growth7d > 0 ? "+" : ""}${o.growth7d}% · 7d`}
         </span>
-        <span>{o.confidence} confidence</span>
-        <span>{o.status}</span>
+        <span>
+          {o.confidence}
+          <Text value={"confidence"} />
+        </span>
+        <span>
+          <Text value={o.status} />
+        </span>
         {delta !== undefined && delta !== null && (
           <span className={delta < 0 ? "red" : "green"}>
             {delta > 0 ? "+" : ""}
-            {delta} since viewed
+            {delta}
+            <Text value={"since viewed"} />
           </span>
         )}
       </div>

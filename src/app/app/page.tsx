@@ -1,3 +1,6 @@
+import { Text } from "@/components/language-provider";
+import { PipelineMonitor } from "@/components/pipeline-monitor";
+import { pipelineStatus } from "@/lib/pipeline-status";
 import Link from "next/link";
 import { eq, desc, gt, gte, sql, and, isNull } from "drizzle-orm";
 import { ScanLine } from "lucide-react";
@@ -61,20 +64,36 @@ export default async function Page() {
     mentions: Number(r.mentions),
     score: Number(r.score),
   }));
+  const status = await pipelineStatus();
   return (
     <>
       <div className="page-title">
         <div>
-          <div className="eyebrow">YOUR MARKET, IN FOCUS</div>
-          <h1>Radar overview</h1>
-          <p>Follow real problems. Find where you can make a difference.</p>
+          <div className="eyebrow">
+            <Text value={"YOUR MARKET, IN FOCUS"} />
+          </div>
+          <h1>
+            <Text value={"Radar overview"} />
+          </h1>
+          <p>
+            <Text
+              value={
+                "Follow real problems. Find where you can make a difference."
+              }
+            />
+          </p>
         </div>
         <Button asChild size="sm">
           <Link href="/app/radars">
-            <ScanLine size={14} /> Create radar
+            <ScanLine size={14} />
+            <Text value={"Create radar"} />
           </Link>
         </Button>
       </div>
+      <PipelineMonitor
+        initial={status}
+        admin={session?.user.role === "admin"}
+      />
       <div className="metrics">
         {[
           ["Opportunities", counts.opportunities, "Evidence-backed problems"],
@@ -82,18 +101,24 @@ export default async function Page() {
           ["Active radars", counts.radars, "Your tracked interests"],
           ["Saved opportunities", counts.saved, "Your watchlist"],
         ].map(([label, value, foot]) => (
-          <div className="metric" key={label}>
-            <div className="metric-label">{label}</div>
+          <div className="metric" key={String(label)}>
+            <div className="metric-label">
+              <Text value={String(label)} />
+            </div>
             <div className="metric-value">{databaseReady() ? value : "—"}</div>
-            <div className="metric-foot">{foot}</div>
+            <div className="metric-foot">
+              <Text value={String(foot)} />
+            </div>
           </div>
         ))}
       </div>
       <section className="panel">
         <div className="panel-title">
-          <h2>Top opportunities</h2>
+          <h2>
+            <Text value={"Top opportunities"} />
+          </h2>
           <Link className="text-link" href="/app/trending">
-            View all ↗
+            <Text value={"View all ↗"} />
           </Link>
         </div>
         {os.length ? (
@@ -109,13 +134,19 @@ export default async function Page() {
         )}
       </section>
       <section className="panel detail-block">
-        <h2>Market signal history</h2>
+        <h2>
+          <Text value={"Market signal history"} />
+        </h2>
         <GrowthChart rows={chartRows} />
       </section>
       <div className="mini-grid">
         <article>
-          <div className="eyebrow">GROWTH, NOT GUESSWORK</div>
-          <h3>Fastest growing</h3>
+          <div className="eyebrow">
+            <Text value={"GROWTH, NOT GUESSWORK"} />
+          </div>
+          <h3>
+            <Text value={"Fastest growing"} />
+          </h3>
           {fastest.map((o) => (
             <p key={o.id}>
               <Link className="text-link" href={"/app/opportunities/" + o.id}>
@@ -124,12 +155,20 @@ export default async function Page() {
             </p>
           ))}
           {!fastest.length && (
-            <p>Not enough historical evidence to measure growth yet.</p>
+            <p>
+              <Text
+                value={"Not enough historical evidence to measure growth yet."}
+              />
+            </p>
           )}
         </article>
         <article>
-          <div className="eyebrow">FRESH ON THE RADAR</div>
-          <h3>New today</h3>
+          <div className="eyebrow">
+            <Text value={"FRESH ON THE RADAR"} />
+          </div>
+          <h3>
+            <Text value={"New today"} />
+          </h3>
           {newToday.map((o) => (
             <p key={o.id}>
               <Link className="text-link" href={"/app/opportunities/" + o.id}>
@@ -138,7 +177,9 @@ export default async function Page() {
             </p>
           ))}
           {!newToday.length && (
-            <p>No new evidence-backed opportunities today.</p>
+            <p>
+              <Text value={"No new evidence-backed opportunities today."} />
+            </p>
           )}
         </article>
       </div>

@@ -1,3 +1,4 @@
+import { Text } from "@/components/language-provider";
 import { PublicShell } from "@/components/public-shell";
 import { plans } from "@/lib/plans";
 import { BillingButton } from "@/components/billing-button";
@@ -5,9 +6,15 @@ export default function Page() {
   return (
     <PublicShell>
       <main className="content-page">
-        <div className="eyebrow">LESS GUESSWORK AT EVERY STAGE</div>
-        <h1>Invest in the right problem.</h1>
-        <p>Start free. Go deeper when you find your direction.</p>
+        <div className="eyebrow">
+          <Text value={"LESS GUESSWORK AT EVERY STAGE"} />
+        </div>
+        <h1>
+          <Text value={"Invest in the right problem."} />
+        </h1>
+        <p>
+          <Text value={"Start free. Go deeper when you find your direction."} />
+        </p>
         <div className="pricing-grid">
           {Object.entries(plans).map(([key, p]) => (
             <article
@@ -17,12 +24,17 @@ export default function Page() {
               <h3>{p.name}</h3>
               <div className="price">
                 ${p.price}
-                <span> / month</span>
+                <span>
+                  {" "}
+                  / <Text value="per month" />
+                </span>
               </div>
               <BillingButton plan={key} />
               <ul>
                 {p.features.map((f) => (
-                  <li key={f}>{f}</li>
+                  <li key={f}>
+                    <Text value={f} />
+                  </li>
                 ))}
               </ul>
             </article>

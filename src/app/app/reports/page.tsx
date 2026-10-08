@@ -1,3 +1,5 @@
+import { Text } from "@/components/language-provider";
+
 import Link from "next/link";
 import { desc } from "drizzle-orm";
 import { db } from "@/db";
@@ -12,7 +14,9 @@ export default async function Page() {
     return (
       <>
         <div className="page-title">
-          <h1>Intelligence reports</h1>
+          <h1>
+            <Text value={"Intelligence reports"} />
+          </h1>
         </div>
         <EmptyState
           title="Your market, over time."
@@ -30,7 +34,9 @@ export default async function Page() {
     <>
       <div className="page-title">
         <div>
-          <h1>Intelligence reports</h1>
+          <h1>
+            <Text value={"Intelligence reports"} />
+          </h1>
           <p>Based on real daily snapshots. No invented MRR or market size.</p>
         </div>
       </div>
@@ -55,7 +61,8 @@ export default async function Page() {
                       </Link>
                       <p className="text-small">
                         {String(o.industry)} · {String(o.status)} ·{" "}
-                        {String(o.confidence)} confidence
+                        {String(o.confidence)}
+                        <Text value={"confidence"} />
                       </p>
                     </div>
                     <div className="text-small">
@@ -65,7 +72,9 @@ export default async function Page() {
                 );
               })
             ) : (
-              <p>Not enough evidence yet.</p>
+              <p>
+                <Text value={"Not enough evidence yet."} />
+              </p>
             )}
           </section>
         ))

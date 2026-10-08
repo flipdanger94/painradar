@@ -162,6 +162,20 @@
       "when": 1791463327297,
       "tag": "0022_gemini-embedding-model",
       "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "7",
+      "when": 1791486630342,
+      "tag": "0023_tearful_frightful_four",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "7",
+      "when": 1791487093471,
+      "tag": "0024_flashy_owl",
+      "breakpoints": true
     }
   ]
 }

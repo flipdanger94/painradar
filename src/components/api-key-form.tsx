@@ -1,4 +1,6 @@
 "use client";
+import { Text } from "@/components/language-provider";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
@@ -33,7 +35,9 @@ export function ApiKeyForm({ workspaceId }: { workspaceId?: string }) {
         }
       }}
     >
-      <label htmlFor="key-name">Key name</label>
+      <label htmlFor="key-name">
+        <Text value={"Key name"} />
+      </label>
       <input
         id="key-name"
         name="name"

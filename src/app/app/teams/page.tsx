@@ -1,3 +1,4 @@
+import { Text } from "@/components/language-provider";
 import Link from "next/link";
 import { sql } from "drizzle-orm";
 import { db, databaseReady } from "@/db";
@@ -13,7 +14,9 @@ export default async function Page() {
     return (
       <>
         <div className="page-title">
-          <h1>Teams & client workspaces</h1>
+          <h1>
+            <Text value={"Teams & client workspaces"} />
+          </h1>
         </div>
         <EmptyState
           title="Your team workspace"
@@ -31,7 +34,9 @@ export default async function Page() {
     <>
       <div className="page-title">
         <div>
-          <h1>Teams & client workspaces</h1>
+          <h1>
+            <Text value={"Teams & client workspaces"} />
+          </h1>
           <p>
             Agency owners sponsor access. Members see only assigned clients;
             administrators see all clients in their team.
@@ -80,7 +85,9 @@ export default async function Page() {
             </div>
             {admin && (
               <>
-                <h3>Create a client workspace</h3>
+                <h3>
+                  <Text value={"Create a client workspace"} />
+                </h3>
                 <TeamForm
                   endpoint="/api/workspaces"
                   payload={{ teamId: t.id }}
@@ -101,7 +108,9 @@ export default async function Page() {
                     },
                   ]}
                 />
-                <h3>Invite a team member</h3>
+                <h3>
+                  <Text value={"Invite a team member"} />
+                </h3>
                 <p className="text-small">
                   Share the returned invitation link with the intended
                   recipient. It expires after seven days and requires their
@@ -125,7 +134,9 @@ export default async function Page() {
                     },
                   ]}
                 />
-                <h3>Members</h3>
+                <h3>
+                  <Text value={"Members"} />
+                </h3>
                 {members.map((m) => (
                   <div className="report-row" key={String(m.id)}>
                     <div>
@@ -159,7 +170,9 @@ export default async function Page() {
                       )}
                   </div>
                 ))}
-                <h3>Pending invitations</h3>
+                <h3>
+                  <Text value={"Pending invitations"} />
+                </h3>
                 {invites.map((i) => (
                   <div className="report-row" key={String(i.id)}>
                     <span>
@@ -180,7 +193,9 @@ export default async function Page() {
       })}
       {plan === "agency" && !teams.some((t) => t.owner_id === s.user.id) && (
         <section className="panel detail-block">
-          <h2>Create your agency team</h2>
+          <h2>
+            <Text value={"Create your agency team"} />
+          </h2>
           <TeamForm
             endpoint="/api/teams"
             fields={[{ name: "name", label: "Agency name" }]}

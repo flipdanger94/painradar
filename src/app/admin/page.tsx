@@ -1,3 +1,7 @@
+import { Text } from "@/components/language-provider";
+
+import { PipelineMonitor } from "@/components/pipeline-monitor";
+import { pipelineStatus } from "@/lib/pipeline-status";
 import {
   invoiceReconciliationHealth,
   recentInvoiceReconciliationErrors,
@@ -91,19 +95,19 @@ export default async function Page() {
     recentInvoiceReconciliationErrors(),
   ]);
   const mrr = Number(billing.catalog_mrr);
+  const status = await pipelineStatus();
   return (
     <AppShell user={session.user.email} admin configured>
       <div className="page-title">
         <div>
           <div className="eyebrow">OPERATIONS</div>
-          <h1>Administration</h1>
+          <h1>
+            <Text value={"Administration"} />
+          </h1>
           <p>Actual stored counts. Catalog estimates are explicitly labeled.</p>
         </div>
-        <ApiButton
-          endpoint="/api/admin/collect"
-          label="Run collection pipeline"
-        />
       </div>
+      <PipelineMonitor initial={status} admin={true} />
       <div className="metrics">
         {[
           ["Users", userCount],
@@ -151,7 +155,9 @@ export default async function Page() {
         verified revenue churn.
       </div>
       <section className="panel detail-block">
-        <h2>Data maintenance</h2>
+        <h2>
+          <Text value={"Data maintenance"} />
+        </h2>
         {maintenance.error ? (
           <p role="alert">{maintenance.error}</p>
         ) : (
@@ -196,7 +202,7 @@ export default async function Page() {
                     UTC
                   </span>
                   <span>
-                    Signals{" "}
+                    <Text value={"Signals"} />{" "}
                     {String(
                       r.result.preview
                         ? r.result.signalsEligible
@@ -231,7 +237,9 @@ export default async function Page() {
       <div className="detail-grid">
         <div>
           <section className="panel detail-block">
-            <h2>Source & crawler health</h2>
+            <h2>
+              <Text value={"Source & crawler health"} />
+            </h2>
             {sourceRows.map((s) => (
               <div className="report-row" key={s.id}>
                 <div>
@@ -259,7 +267,9 @@ export default async function Page() {
             ))}
           </section>
           <section className="panel detail-block">
-            <h2>Publication queue</h2>
+            <h2>
+              <Text value={"Publication queue"} />
+            </h2>
             <p className="text-small">
               {publicationSummary.rows
                 .map((r) => String(r.status) + ": " + String(r.count))
@@ -271,7 +281,9 @@ export default async function Page() {
                 {String(r.status)} · {String(r.last_error)}
               </p>
             ))}
-            <h2>Job runs</h2>
+            <h2>
+              <Text value={"Job runs"} />
+            </h2>
             {jobs.length ? (
               jobs.map((j) => (
                 <div className="report-row" key={j.id}>
@@ -287,7 +299,9 @@ export default async function Page() {
             )}
           </section>
           <section className="panel detail-block">
-            <h2>Recent users</h2>
+            <h2>
+              <Text value={"Recent users"} />
+            </h2>
             {recentUsers.map((u) => (
               <p className="text-small wrap" key={u.id}>
                 {u.email} · {u.role} · {u.createdAt.toISOString().slice(0, 10)}
@@ -295,7 +309,9 @@ export default async function Page() {
             ))}
           </section>
           <section className="panel detail-block">
-            <h2>Recently updated subscriptions</h2>
+            <h2>
+              <Text value={"Recently updated subscriptions"} />
+            </h2>
             {subs.map((s) => (
               <p className="text-small wrap" key={s.id}>
                 {s.userId} · {s.plan} · {s.status}
@@ -303,7 +319,9 @@ export default async function Page() {
             ))}
           </section>
           <section className="panel detail-block">
-            <h2>Stripe reconciliation</h2>
+            <h2>
+              <Text value={"Stripe reconciliation"} />
+            </h2>
             <p className="text-small">
               {String(reconciliationHealth.tracked)} known customers ·{" "}
               {String(reconciliationHealth.never)} never reconciled ·{" "}
@@ -329,7 +347,9 @@ export default async function Page() {
             ))}
           </section>
           <section className="panel detail-block">
-            <h2>Invoice recovery</h2>
+            <h2>
+              <Text value={"Invoice recovery"} />
+            </h2>
             <p className="text-small">
               {String(invoiceHealth.tracked)} known customers ·{" "}
               {String(invoiceHealth.never)} no completed scan ·{" "}
@@ -356,7 +376,9 @@ export default async function Page() {
             ))}
           </section>
           <section className="panel detail-block">
-            <h2>Recent subscription observations</h2>
+            <h2>
+              <Text value={"Recent subscription observations"} />
+            </h2>
             {billingHistory.length ? (
               billingHistory.map((h) => (
                 <div className="report-row" key={String(h.id)}>
@@ -382,12 +404,20 @@ export default async function Page() {
           </section>
         </div>
         <section className="panel detail-block">
-          <h2>Configure source</h2>
+          <h2>
+            <Text value={"Configure source"} />
+          </h2>
           <p className="text-small">
             Only public sources. Reddit requires authorized API credentials.
             GitHub uses explicit repository scopes.
           </p>
-          <SourceConfigForm />
+          <SourceConfigForm
+            sources={sourceRows.map((s) => ({
+              id: s.id,
+              enabled: s.enabled,
+              config: s.config,
+            }))}
+          />
         </section>
       </div>
     </AppShell>

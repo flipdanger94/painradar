@@ -4,6 +4,9 @@ export default defineConfig({
   use: {
     baseURL: process.env.TEST_BASE_URL || "http://localhost:3000",
     trace: "retain-on-failure",
+    launchOptions: process.env.PLAYWRIGHT_CHROMIUM_PATH
+      ? { executablePath: process.env.PLAYWRIGHT_CHROMIUM_PATH }
+      : undefined,
     screenshot: "only-on-failure",
   },
   projects: [360, 375, 390, 768, 1024, 1440].map((width) => ({
