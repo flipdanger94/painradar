@@ -1,3 +1,4 @@
+import { POST as collectPost } from "@/app/api/admin/collect/route";
 import { PATCH as radarPatch } from "@/app/api/radars/route";
 import { POST as maintenancePost } from "@/app/api/admin/maintenance/route";
 import { describe, it, expect, vi, beforeEach } from "vitest";
@@ -161,4 +162,27 @@ describe("radar editing endpoint boundaries", () => {
     ])
       expect((await radarPatch(request(body))).status).toBe(400);
   });
+});
+
+it("reports missing collection setup before sending background jobs", async () => {
+  session.value = { user: { id: "fixture", role: "admin" } };
+  const eventKey = process.env.INNGEST_EVENT_KEY;
+  const signingKey = process.env.INNGEST_SIGNING_KEY;
+  delete process.env.INNGEST_EVENT_KEY;
+  delete process.env.INNGEST_SIGNING_KEY;
+  try {
+    const response = await collectPost(
+      new Request("https://painradar.example/api/admin/collect", {
+        method: "POST",
+        headers: { origin: "https://painradar.example" },
+      }),
+    );
+    expect(response.status).toBe(503);
+    expect((await response.json()).error).toContain(
+      "Background collection is not configured",
+    );
+  } finally {
+    if (eventKey !== undefined) process.env.INNGEST_EVENT_KEY = eventKey;
+    if (signingKey !== undefined) process.env.INNGEST_SIGNING_KEY = signingKey;
+  }
 });
