@@ -348,3 +348,8 @@ Checkout body принимает только plan=pro/founder/agency; прои�
 Server и BillingButton проверяют абсолютный HTTPS redirect без credentials; custom billing domains допустимы. Отсутствующая/небезопасная provider URL даёт 502, не successful audit. Client обрабатывает malformed/non-JSON error responses и не переходит на undefined URL. Эти проверки не подтверждают активность Price/recurrence/Portal configuration в реальном Stripe аккаунте. Миграции не изменены; live Checkout/Portal и browser interactions ещё требуют acceptance.
 
 Stripe reference: [subscription states and recovery](https://docs.stripe.com/billing/subscriptions/overview).
+
+
+## Редактирование радаров
+
+Личные радары и радары клиентских workspaces можно менять через «Edit radar»: название, ключевые слова, исключения, отрасли, источники, языки, порог и частоту. PATCH /api/radars сохраняет прежний ID и дату создания; не расходует лимит новых радаров. Примените migration 0021 перед использованием. SQL-функция обновляет настройки, ключевые слова и audit log одной транзакцией, сериализует изменения одного радара и проверяет личного владельца либо текущие workspace admin/editor права под team lock. Viewer и чужие пользователи не могут редактировать; перенести радар между scopes этим запросом нельзя. Уже отправленные уведомления сохраняются; новые совпадения используют обновлённые фильтры.

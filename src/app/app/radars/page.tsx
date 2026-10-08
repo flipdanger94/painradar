@@ -43,6 +43,15 @@ export default async function Page() {
                     <p className="text-small">
                       {r.sources.join(", ")} · {r.languages.join(", ")}
                     </p>
+                    <details style={{ marginBlock: 16 }}>
+                      <summary>Edit radar</summary>
+                      <RadarForm
+                        radar={{
+                          ...r,
+                          keywords: k.map((item) => item.keyword),
+                        }}
+                      />
+                    </details>
                     <ApiButton
                       endpoint="/api/radars"
                       method="DELETE"

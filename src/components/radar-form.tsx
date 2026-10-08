@@ -10,7 +10,24 @@ const split = (s: FormDataEntryValue | null) =>
     .split(",")
     .map((v) => v.trim())
     .filter(Boolean);
-export function RadarForm({ workspaceId }: { workspaceId?: string }) {
+export type RadarValues = {
+  id: string;
+  name: string;
+  keywords: string[];
+  excludedWords: string[];
+  industries: string[];
+  sources: string[];
+  languages: string[];
+  alertThreshold: number;
+  frequency: string;
+};
+export function RadarForm({
+  workspaceId,
+  radar,
+}: {
+  workspaceId?: string;
+  radar?: RadarValues;
+}) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -18,6 +35,7 @@ export function RadarForm({ workspaceId }: { workspaceId?: string }) {
   return (
     <form
       className="form-stack"
+      aria-busy={busy}
       onSubmit={async (e) => {
         e.preventDefault();
         const form = e.currentTarget;
@@ -27,10 +45,11 @@ export function RadarForm({ workspaceId }: { workspaceId?: string }) {
         setSuccess(false);
         try {
           const r = await fetch("/api/radars", {
-            method: "POST",
+            method: radar ? "PATCH" : "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               workspaceId,
+              id: radar?.id,
               name: f.get("name"),
               keywords: split(f.get("keywords")),
               excludedWords: split(f.get("excludedWords")),
@@ -41,10 +60,15 @@ export function RadarForm({ workspaceId }: { workspaceId?: string }) {
               frequency: f.get("frequency"),
             }),
           });
-          const d = await r.json();
-          if (!r.ok) throw new Error(d.error);
-          track("radar_created", { radarId: d.id });
-          form.reset();
+          const d = await r.json().catch(() => null);
+          if (!r.ok || !d?.id)
+            throw new Error(
+              d?.error || "Could not save radar. Please try again.",
+            );
+          if (!radar) {
+            track("radar_created", { radarId: d.id });
+            form.reset();
+          }
           setSuccess(true);
           router.refresh();
         } catch (e) {
@@ -55,10 +79,13 @@ export function RadarForm({ workspaceId }: { workspaceId?: string }) {
       }}
     >
       <div>
-        <label htmlFor="radar-name">Radar name</label>
+        <label htmlFor={`${radar?.id || workspaceId || "new"}-name`}>
+          Radar name
+        </label>
         <input
-          id="radar-name"
+          id={`${radar?.id || workspaceId || "new"}-name`}
           name="name"
+          defaultValue={radar?.name}
           placeholder="e.g. Developer workflow friction"
           required
           minLength={2}
@@ -66,34 +93,43 @@ export function RadarForm({ workspaceId }: { workspaceId?: string }) {
         />
       </div>
       <div>
-        <label htmlFor="radar-keywords">Keywords, separated by commas</label>
+        <label htmlFor={`${radar?.id || workspaceId || "new"}-keywords`}>
+          Keywords, separated by commas
+        </label>
         <input
-          id="radar-keywords"
+          id={`${radar?.id || workspaceId || "new"}-keywords`}
           name="keywords"
+          defaultValue={radar?.keywords.join(", ")}
           placeholder="deployment, debugging, slow builds"
           required
           maxLength={1600}
         />
       </div>
       <div>
-        <label htmlFor="radar-excluded">Excluded words</label>
+        <label htmlFor={`${radar?.id || workspaceId || "new"}-excluded`}>
+          Excluded words
+        </label>
         <input
-          id="radar-excluded"
+          id={`${radar?.id || workspaceId || "new"}-excluded`}
           name="excludedWords"
+          defaultValue={radar?.excludedWords.join(", ")}
           placeholder="job posting, hiring"
           maxLength={1600}
         />
       </div>
       <div>
-        <label htmlFor="radar-industries">Industries (optional)</label>
+        <label htmlFor={`${radar?.id || workspaceId || "new"}-industries`}>
+          Industries (optional)
+        </label>
         <input
-          id="radar-industries"
+          id={`${radar?.id || workspaceId || "new"}-industries`}
           name="industries"
+          defaultValue={radar?.industries.join(", ")}
           placeholder="Developer tools"
           maxLength={1600}
-          list="radar-industry-options"
+          list={`${radar?.id || workspaceId || "new"}-industry-options`}
         />
-        <datalist id="radar-industry-options">
+        <datalist id={`${radar?.id || workspaceId || "new"}-industry-options`}>
           {industries.map((label) => (
             <option key={label} value={label} />
           ))}
@@ -120,7 +156,7 @@ export function RadarForm({ workspaceId }: { workspaceId?: string }) {
               type="checkbox"
               name="sources"
               value={id}
-              defaultChecked={id === "hn"}
+              defaultChecked={radar ? radar.sources.includes(id) : id === "hn"}
             />
             {label}
           </label>
@@ -143,27 +179,37 @@ export function RadarForm({ workspaceId }: { workspaceId?: string }) {
               type="checkbox"
               name="languages"
               value={id}
-              defaultChecked={id === "en"}
+              defaultChecked={
+                radar ? radar.languages.includes(id) : id === "en"
+              }
             />
             {languageLabels[id]}
           </label>
         ))}
       </fieldset>
       <div>
-        <label htmlFor="radar-threshold">Alert score threshold</label>
+        <label htmlFor={`${radar?.id || workspaceId || "new"}-threshold`}>
+          Alert score threshold
+        </label>
         <input
-          id="radar-threshold"
+          id={`${radar?.id || workspaceId || "new"}-threshold`}
           name="threshold"
           type="number"
           min={0}
           max={100}
-          defaultValue={60}
+          defaultValue={radar?.alertThreshold ?? 60}
           required
         />
       </div>
       <div>
-        <label htmlFor="radar-frequency">Frequency</label>
-        <select id="radar-frequency" name="frequency">
+        <label htmlFor={`${radar?.id || workspaceId || "new"}-frequency`}>
+          Frequency
+        </label>
+        <select
+          id={`${radar?.id || workspaceId || "new"}-frequency`}
+          name="frequency"
+          defaultValue={radar?.frequency ?? "daily"}
+        >
           <option value="daily">Daily</option>
           <option value="weekly">Weekly</option>
         </select>
@@ -175,10 +221,14 @@ export function RadarForm({ workspaceId }: { workspaceId?: string }) {
       )}
       {success && (
         <p className="success-message" role="status">
-          Radar created. Alerts will follow matching evidence.
+          {radar
+            ? "Radar updated. Alerts will use the saved filters."
+            : "Radar created. Alerts will follow matching evidence."}
         </p>
       )}
-      <Button disabled={busy}>{busy ? "Creating…" : "Create radar →"}</Button>
+      <Button disabled={busy}>
+        {busy ? "Saving…" : radar ? "Save changes" : "Create radar →"}
+      </Button>
     </form>
   );
 }

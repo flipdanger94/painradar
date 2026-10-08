@@ -1,3 +1,4 @@
+import { PATCH as radarPatch } from "@/app/api/radars/route";
 import { POST as maintenancePost } from "@/app/api/admin/maintenance/route";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 const session = vi.hoisted(() => ({
@@ -121,5 +122,43 @@ describe("maintenance admin endpoint boundaries", () => {
         )
       ).status,
     ).toBe(400);
+  });
+});
+
+describe("radar editing endpoint boundaries", () => {
+  const request = (body: unknown, origin = "https://painradar.example") =>
+    new Request("https://painradar.example/api/radars", {
+      method: "PATCH",
+      headers: { origin, "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+  it("rejects guests and cross-origin edits", async () => {
+    expect((await radarPatch(request({}))).status).toBe(401);
+    session.value = { user: { id: "fixture", role: "user" } };
+    expect(
+      (await radarPatch(request({}, "https://attacker.example"))).status,
+    ).toBe(403);
+  });
+  it("rejects invalid filters and caller-supplied ownership", async () => {
+    session.value = { user: { id: "fixture", role: "user" } };
+    const valid = {
+      id: "a0000000-0000-4000-8000-000000000001",
+      name: "Radar",
+      keywords: ["builds"],
+      excludedWords: [],
+      industries: [],
+      sources: ["hn"],
+      languages: ["en"],
+      alertThreshold: 60,
+      frequency: "daily",
+    };
+    for (const body of [
+      { ...valid, userId: "other" },
+      { ...valid, keywords: [] },
+      { ...valid, sources: [] },
+      { ...valid, languages: [] },
+      { ...valid, alertThreshold: 101 },
+    ])
+      expect((await radarPatch(request(body))).status).toBe(400);
   });
 });

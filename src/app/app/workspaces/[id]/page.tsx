@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { eq, desc, sql, and, isNull } from "drizzle-orm";
+import { eq, desc, sql, and, isNull, inArray } from "drizzle-orm";
 import { db } from "@/db";
-import { radars, workspaceReports, apiKeys } from "@/db/schema";
+import { radars, radarKeywords, workspaceReports, apiKeys } from "@/db/schema";
 import { getSession } from "@/lib/auth";
 import { ApiError } from "@/lib/security";
 import { requireWorkspace } from "@/lib/tenancy";
@@ -49,6 +49,18 @@ export default async function Page({
           .where(and(eq(apiKeys.workspaceId, id), isNull(apiKeys.revokedAt)))
       : Promise.resolve([]),
   ]);
+  const keywords =
+    edit && rs.length
+      ? await db()
+          .select()
+          .from(radarKeywords)
+          .where(
+            inArray(
+              radarKeywords.radarId,
+              rs.map((r) => r.id),
+            ),
+          )
+      : [];
   const members =
     w.role === "admin"
       ? (
@@ -110,17 +122,33 @@ export default async function Page({
       <section className="panel detail-block">
         <h2>Client radars</h2>
         {rs.map((r) => (
-          <div className="report-row" key={r.id}>
-            <span>
-              {r.name} · {r.frequency}
-            </span>
+          <div key={r.id}>
+            <div className="report-row">
+              <span>
+                {r.name} · {r.frequency}
+              </span>
+              {edit && (
+                <ApiButton
+                  endpoint="/api/radars"
+                  method="DELETE"
+                  payload={{ id: r.id }}
+                  label="Delete radar"
+                />
+              )}
+            </div>
             {edit && (
-              <ApiButton
-                endpoint="/api/radars"
-                method="DELETE"
-                payload={{ id: r.id }}
-                label="Delete radar"
-              />
+              <details style={{ marginBlock: 16 }}>
+                <summary>Edit radar</summary>
+                <RadarForm
+                  workspaceId={id}
+                  radar={{
+                    ...r,
+                    keywords: keywords
+                      .filter((k) => k.radarId === r.id)
+                      .map((k) => k.keyword),
+                  }}
+                />
+              </details>
             )}
           </div>
         ))}

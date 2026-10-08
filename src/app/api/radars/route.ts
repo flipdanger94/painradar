@@ -14,17 +14,19 @@ import {
 } from "@/lib/security";
 import { requireWorkspace } from "@/lib/tenancy";
 import { plans } from "@/lib/plans";
-const radarSchema = z.object({
-  workspaceId: z.uuid().optional(),
-  name: z.string().trim().min(2).max(80),
-  keywords: z.array(z.string().trim().min(2).max(80)).min(1).max(20),
-  excludedWords: z.array(z.string().trim().max(80)).max(20).default([]),
-  industries: z.array(z.string().max(80)).max(20).default([]),
-  sources: z.array(z.enum(["hn", "github", "reddit"])).min(1),
-  languages: z.array(z.enum(languageCodes)).min(1),
-  alertThreshold: z.number().int().min(0).max(100),
-  frequency: z.enum(["daily", "weekly"]),
-});
+const radarSchema = z
+  .object({
+    workspaceId: z.uuid().optional(),
+    name: z.string().trim().min(2).max(80),
+    keywords: z.array(z.string().trim().min(2).max(80)).min(1).max(20),
+    excludedWords: z.array(z.string().trim().max(80)).max(20).default([]),
+    industries: z.array(z.string().max(80)).max(20).default([]),
+    sources: z.array(z.enum(["hn", "github", "reddit"])).min(1),
+    languages: z.array(z.enum(languageCodes)).min(1),
+    alertThreshold: z.number().int().min(0).max(100),
+    frequency: z.enum(["daily", "weekly"]),
+  })
+  .strict();
 export const GET = endpoint(async (req) => {
   const user = await requireUser();
   const ws = new URL(req.url).searchParams.get("workspaceId");
@@ -96,4 +98,16 @@ export const DELETE = endpoint(async (req) => {
     );
   await audit(user.id, "radar.deleted", { radarId: id });
   return Response.json({ ok: true });
+});
+
+export const PATCH = endpoint(async (req) => {
+  const user = await requireUser();
+  await rateLimit(user.id);
+  const data = await input(req, radarSchema.extend({ id: z.uuid() }));
+  const result = await db().execute(
+    sql`select update_radar(${data.id}::uuid,${user.id},${data.workspaceId ?? null}::uuid,${data.name},${JSON.stringify(data.excludedWords)}::jsonb,${JSON.stringify(data.industries)}::jsonb,${JSON.stringify(data.sources)}::jsonb,${JSON.stringify(data.languages)}::jsonb,${data.alertThreshold},${data.frequency},${JSON.stringify([...new Set(data.keywords)])}::jsonb) as radar_id`,
+  );
+  if (!result.rows[0]?.radar_id)
+    throw new ApiError(404, "Radar not found or editing access withdrawn.");
+  return Response.json({ id: data.id });
 });
