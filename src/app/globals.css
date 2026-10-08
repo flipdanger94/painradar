@@ -1794,3 +1794,118 @@ body {
     padding-bottom: 12px;
   }
 }
+
+.signal-list {
+  display: grid;
+  gap: 16px;
+}
+.signal-filters {
+  align-items: center;
+}
+.signal-filters input {
+  min-width: 180px;
+  flex: 1;
+}
+.signal-list-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  color: var(--muted);
+  font-size: 13px;
+  margin: 20px 0;
+}
+.signal-item {
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  background: linear-gradient(135deg, #141e32, #0d1423);
+  min-width: 0;
+}
+.signal-item-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.signal-item-meta time {
+  margin-left: auto;
+}
+.signal-item h2 {
+  font-size: 19px;
+  line-height: 1.5;
+  margin: 14px 0 8px;
+  overflow-wrap: anywhere;
+}
+.signal-item h2 a {
+  color: var(--text);
+}
+.signal-item h2 svg {
+  display: inline;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+.signal-item p {
+  line-height: 1.7;
+  color: var(--muted);
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+.signal-author {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 18px;
+  overflow-wrap: anywhere;
+}
+.signal-author a {
+  margin-left: auto;
+  color: var(--accent);
+}
+.signal-state-queued {
+  color: #f4c578;
+}
+.signal-state-related {
+  color: #91b7ff;
+}
+.signal-state-processed {
+  color: #73dbc2;
+}
+.signal-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 24px 0;
+  font-size: 14px;
+  gap: 12px;
+}
+.signal-browse-link {
+  display: inline-block;
+  margin: 18px 0 8px;
+}
+@media (max-width: 768px) {
+  .signal-item {
+    padding: 18px;
+  }
+  .signal-list-heading {
+    flex-direction: column;
+    gap: 5px;
+  }
+  .signal-author a {
+    margin-left: 0;
+  }
+  .signal-item-meta time {
+    margin-left: 0;
+  }
+}
+.pipeline-steps li.failed {
+  color: #f1a3ab;
+}
+.pipeline-steps li.failed > span {
+  background: #4a2235;
+  border-color: #ae5670;
+}

@@ -234,11 +234,11 @@ export function AuthForm({
         </Link>
       </div>
       <p className="auth-fineprint">
-        By continuing, you agree to our{" "}
+        <Text value="By continuing, you agree to our" />{" "}
         <Link href="/terms">
           <Text value={"Terms"} />
         </Link>{" "}
-        and{" "}
+        <Text value="and" />{" "}
         <Link href="/privacy">
           <Text value={"Privacy notice"} />
         </Link>

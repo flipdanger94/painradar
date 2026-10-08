@@ -29,6 +29,7 @@ import { Button } from "./ui/button";
 import { authClient } from "@/lib/auth-client";
 const links = [
   ["/app", "Overview", LayoutDashboard],
+  ["/app/signals", "Signals", Radio],
   ["/app/trending", "Trending", TrendingUp],
   ["/app/watchlist", "Watchlist", Bookmark],
   ["/app/radars", "My radars", ScanLine],

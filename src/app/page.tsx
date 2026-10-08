@@ -167,24 +167,30 @@ export default async function Home() {
               </span>
             </h2>
             <p>
-              Real conversations, original links, transparent scoring. AI helps
-              interpret the evidence — it never invents it.
+              <Text
+                value={
+                  "Real conversations, original links, transparent scoring. AI helps interpret the evidence — it never invents it."
+                }
+              />
             </p>
             <ul className="check-list">
               <li>
-                <ShieldCheck size={18} /> Facts, AI inference, and hypotheses
-                clearly labeled
+                <ShieldCheck size={18} />
+                <Text
+                  value={"Facts, AI inference, and hypotheses clearly labeled"}
+                />
               </li>
               <li>
-                <Globe size={18} /> Original sources one click away
+                <Globe size={18} />
+                <Text value={"Original sources one click away"} />
               </li>
               <li>
-                <ChartNoAxesCombined size={18} /> Confidence that reflects the
-                sample size
+                <ChartNoAxesCombined size={18} />
+                <Text value={"Confidence that reflects the sample size"} />
               </li>
             </ul>
             <Link className="text-link" href="/app">
-              Open your intelligence workspace ↗
+              <Text value={"Open your intelligence workspace ↗"} />
             </Link>
           </div>
           <div className="evidence-preview">
@@ -219,8 +225,11 @@ export default async function Home() {
                   <Text value={"Let the evidence lead."} />
                 </h3>
                 <p>
-                  Opportunities appear after connected sources provide enough
-                  independent signals. No fabricated examples.
+                  <Text
+                    value={
+                      "Opportunities appear after connected sources provide enough independent signals. No fabricated examples."
+                    }
+                  />
                 </p>
                 <Button asChild variant="outline">
                   <Link href="/signup">
@@ -316,7 +325,13 @@ export default async function Home() {
           <h2>
             <Text value={"Build with conviction."} />
           </h2>
-          <p>Find the pain. Follow the evidence. Make something people need.</p>
+          <p>
+            <Text
+              value={
+                "Find the pain. Follow the evidence. Make something people need."
+              }
+            />
+          </p>
           <Button asChild>
             <Link href="/signup">
               <Text value={"Start your radar"} />

@@ -1,5 +1,5 @@
 "use client";
-import { Text } from "@/components/language-provider";
+import { Text, useTranslation } from "@/components/language-provider";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -7,6 +7,7 @@ import { Button } from "./ui/button";
 export function ApiKeyForm({ workspaceId }: { workspaceId?: string }) {
   const [key, setKey] = useState("");
   const [error, setError] = useState("");
+  const t = useTranslation();
   const [busy, setBusy] = useState(false);
   const router = useRouter();
   return (
@@ -43,19 +44,21 @@ export function ApiKeyForm({ workspaceId }: { workspaceId?: string }) {
         name="name"
         required
         maxLength={80}
-        placeholder="My research integration"
+        placeholder={t("My research integration")}
       />
-      <Button disabled={busy}>{busy ? "Creating…" : "Create API key"}</Button>
+      <Button disabled={busy}>
+        {t(busy ? "Creating…" : "Create API key")}
+      </Button>
       {key && (
         <div className="notice wrap">
-          Copy this key now. It will never be shown again.
+          <Text value="Copy this key now. It will never be shown again." />
           <br />
           <code>{key}</code>
         </div>
       )}
       {error && (
         <p className="error-message" role="alert">
-          {error}
+          {t(error)}
         </p>
       )}
     </form>

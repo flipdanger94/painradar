@@ -26,7 +26,7 @@ export default function Page() {
                 ${p.price}
                 <span>
                   {" "}
-                  / <Text value="per month" />
+                  / <Text value="month" />
                 </span>
               </div>
               <BillingButton plan={key} />

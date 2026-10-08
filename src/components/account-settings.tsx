@@ -1,5 +1,5 @@
 "use client";
-import { Text } from "@/components/language-provider";
+import { Text, useTranslation } from "@/components/language-provider";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -22,6 +22,7 @@ export function AccountSettings({
   email: string;
   verified: boolean;
 }) {
+  const t = useTranslation();
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -214,19 +215,19 @@ export function AccountSettings({
             other devices.
           </p>
           <Button disabled={busy} type="submit">
-            Change password
+            <Text value={"Change password"} />
           </Button>
         </form>
       </div>
       <div aria-live="polite">
         {error && (
           <p role="alert" className="error-message">
-            {error}
+            {t(error)}
           </p>
         )}
         {message && (
           <p role="status" className="success-message">
-            {message}
+            {t(message)}
           </p>
         )}
       </div>
@@ -238,28 +239,34 @@ export function AccountSettings({
           Up to 100 active sessions, newest first. End access on a device you no
           longer use.
         </p>
-        {loading && <p role="status">Loading sessions…</p>}
+        {loading && (
+          <p role="status">
+            <Text value={"Loading sessions…"} />
+          </p>
+        )}
         {sessionError && (
           <div>
             <p role="alert" className="error-message">
-              {sessionError}
+              {t(sessionError)}
             </p>
             <Button
               variant="outline"
               onClick={() => setReload((value) => value + 1)}
             >
-              Retry
+              <Text value={"Retry"} />
             </Button>
           </div>
         )}
         {!loading && !sessionError && !sessions.length && (
-          <p>No active sessions found.</p>
+          <p>
+            <Text value={"No active sessions found."} />
+          </p>
         )}
         {sessions.map((session) => (
           <div className="report-row" key={session.id}>
             <div className="session-description">
               <strong>
-                {session.current ? "This device" : "Other device"}
+                {t(session.current ? "This device" : "Other device")}
               </strong>
               <p className="text-small wrap">
                 {session.userAgent || "Browser details unavailable"}
@@ -274,7 +281,7 @@ export function AccountSettings({
                 disabled={revoking !== null || busy}
                 onClick={() => void revoke(session.id)}
               >
-                {revoking === session.id ? "Ending…" : "End session"}
+                {t(revoking === session.id ? "Ending…" : "End session")}
               </Button>
             )}
           </div>

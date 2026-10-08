@@ -343,6 +343,124 @@ per month|por mes|pro Monat|por mês|月額|每月|в месяц
 Opening…|Abriendo…|Wird geöffnet…|Abrindo…|開いています…|正在打开…|Открываем…
 Manage subscription|Gestionar suscripción|Abonnement verwalten|Gerenciar assinatura|サブスクリプションを管理|管理订阅|Управлять подпиской
 Choose|Elegir|Wählen|Escolher|選択|选择|Выбрать
+ORIGINAL CONVERSATIONS|CONVERSACIONES ORIGINALES|ORIGINALE DISKUSSIONEN|CONVERSAS ORIGINAIS|元の会話|原始讨论|ИСХОДНЫЕ ОБСУЖДЕНИЯ
+Read the original discussions and follow how each signal is processed.|Lee las discusiones originales y sigue el procesamiento.|Lesen Sie Originaldiskussionen und verfolgen Sie die Verarbeitung.|Leia as discussões originais e acompanhe o processamento.|元の会話を読み、処理状況を確認できます。|阅读原始讨论并查看处理状态。|Открывайте исходные обсуждения и следите за обработкой сигналов.
+Search signals|Buscar señales|Signale suchen|Buscar sinais|シグナルを検索|搜索信号|Поиск сигналов
+Processing state|Estado de procesamiento|Verarbeitungsstatus|Estado do processamento|処理状況|处理状态|Состояние обработки
+All processing states|Todos los estados|Alle Status|Todos os estados|すべての状態|所有状态|Любое состояние
+Waiting for AI processing|Esperando el procesamiento IA|Wartet auf KI-Verarbeitung|Aguardando processamento IA|AI処理待ち|等待AI处理|Ожидает обработки ИИ
+Waiting for related evidence|Esperando evidencia relacionada|Wartet auf ähnliche Belege|Aguardando evidências relacionadas|関連する証拠を待っています|等待相关证据|Ожидает похожих подтверждений
+Reviewed|Revisada|Geprüft|Revisado|確認済み|已审查|Проверен
+Duplicate|Duplicada|Duplikat|Duplicado|重複|重复|Дубликат
+A collected signal is evidence, not a validated opportunity.|Una señal es evidencia; la oportunidad requiere validación.|Ein Signal ist ein Beleg; eine Chance benötigt Validierung.|Um sinal é uma evidência; a oportunidade exige validação.|シグナルは証拠であり、機会には検証が必要です。|信号是证据，机会需要验证。|Собранный сигнал — подтверждение. Возможность требует отдельной проверки.
+Read original discussion|Leer discusión original|Originaldiskussion lesen|Ler discussão original|元の会話を読む|阅读原始讨论|Открыть обсуждение
+No signals match these filters.|No hay señales con estos filtros.|Keine Signale passen zu diesen Filtern.|Nenhum sinal corresponde aos filtros.|条件に合うシグナルはありません。|没有符合筛选的信号。|По этим фильтрам сигналов нет.
+Try another source or search phrase.|Prueba otra fuente o búsqueda.|Versuchen Sie eine andere Quelle oder Suche.|Tente outra fonte ou pesquisa.|別のソースや検索語を試してください。|尝试其他来源或关键词。|Выберите другой источник или поисковый запрос.
+Connect source collection to see original signals here.|Conecta las fuentes para ver señales aquí.|Verbinden Sie Quellen, um Signale zu sehen.|Conecte as fontes para ver sinais aqui.|ソース収集を設定すると表示されます。|配置来源采集后即可查看信号。|Настройте сбор источников, чтобы увидеть исходные сигналы.
+Signal pages|Páginas de señales|Signalseiten|Páginas de sinais|シグナルのページ|信号分页|Страницы сигналов
+Previous|Anterior|Zurück|Anterior|前へ|上一页|Назад
+Next|Siguiente|Weiter|Próxima|次へ|下一页|Далее
+Page|Página|Seite|Página|ページ|页|Страница
+Browse all signals →|Ver todas las señales →|Alle Signale ansehen →|Ver todos os sinais →|すべてのシグナルを見る →|查看所有信号 →|Посмотреть все сигналы →
+Gemini quota reached. Wait for the quota to renew, then continue processing.|Se alcanzó la cuota de Gemini. Espera a que se renueve para continuar.|Gemini-Kontingent erreicht. Warten Sie auf die Erneuerung und fahren Sie fort.|Cota do Gemini atingida. Aguarde a renovação para continuar.|Geminiの上限に達しました。更新後に処理を続けてください。|Gemini额度已用尽，刷新后继续处理。|Достигнут лимит Gemini. Дождитесь обновления квоты и продолжите обработку.
+Gemini is not configured. Ask the administrator to finish AI setup.|Gemini no está configurado. Pide al administrador que lo configure.|Gemini ist nicht konfiguriert. Bitten Sie den Administrator um Einrichtung.|Gemini não está configurado. Peça ao administrador para configurar.|Geminiが未設定です。管理者に設定を依頼してください。|Gemini未配置，请管理员完成设置。|Gemini не настроен. Попросите администратора завершить настройку ИИ.
+Gemini access was rejected. The administrator should check the API key and model access.|Gemini rechazó el acceso. El administrador debe revisar la clave y el modelo.|Gemini-Zugriff abgelehnt. Prüfen Sie API-Schlüssel und Modellzugriff.|Acesso ao Gemini rejeitado. Verifique a chave e o acesso ao modelo.|Geminiへのアクセスが拒否されました。管理者がキーとモデルを確認してください。|Gemini拒绝访问，管理员应检查密钥和模型权限。|Gemini отклонил доступ. Администратору нужно проверить ключ и доступ к модели.
+The selected Gemini model is unavailable. Check the model configuration.|El modelo Gemini no está disponible. Revisa su configuración.|Das gewählte Gemini-Modell ist nicht verfügbar. Prüfen Sie die Konfiguration.|O modelo Gemini está indisponível. Verifique a configuração.|選択したGeminiモデルが利用できません。設定を確認してください。|所选Gemini模型不可用，请检查配置。|Выбранная модель Gemini недоступна. Проверьте настройки модели.
+Gemini is temporarily unavailable. Try processing again later.|Gemini no está disponible temporalmente. Inténtalo más tarde.|Gemini ist vorübergehend nicht verfügbar. Versuchen Sie es später.|Gemini está temporariamente indisponível. Tente novamente depois.|Geminiは一時的に利用できません。後で再試行してください。|Gemini暂时不可用，请稍后重试。|Gemini временно недоступен. Повторите обработку позже.
+Copy this value now:|Copia este valor ahora:|Kopieren Sie diesen Wert jetzt:|Copie este valor agora:|この値をコピーしてください：|请立即复制此值：|Скопируйте значение сейчас:
+Sending…|Enviando…|Wird gesendet…|Enviando…|送信中…|发送中…|Отправляем…
+Send verification link|Enviar enlace de verificación|Bestätigungslink senden|Enviar link de verificação|認証リンクを送信|发送验证链接|Отправить ссылку подтверждения
+If your account needs verification, a link will be sent.|Si tu cuenta necesita verificación, recibirás un enlace.|Falls Ihr Konto eine Bestätigung benötigt, wird ein Link gesendet.|Se a conta precisar de verificação, um link será enviado.|認証が必要な場合、リンクを送信します。|如账户需要验证，将发送链接。|Если аккаунту нужно подтверждение, мы отправим ссылку.
+Creating…|Creando…|Wird erstellt…|Criando…|作成中…|创建中…|Создаём…
+Create API key|Crear clave API|API-Schlüssel erstellen|Criar chave API|APIキーを作成|创建API密钥|Создать API-ключ
+My research integration|Mi integración de investigación|Meine Recherche-Integration|Minha integração de pesquisa|調査用の連携|研究集成|Моя интеграция для исследований
+Copy this key now. It will never be shown again.|Copia la clave ahora. No se volverá a mostrar.|Kopieren Sie den Schlüssel jetzt. Er wird nicht erneut angezeigt.|Copie a chave agora. Ela não será mostrada novamente.|キーをコピーしてください。再表示はできません。|请立即复制密钥，不会再次显示。|Скопируйте ключ сейчас. Он больше не будет показан.
+Request failed|La solicitud falló|Anfrage fehlgeschlagen|Falha na solicitação|リクエストに失敗しました|请求失败|Запрос не выполнен
+Collect public complaints, feature requests, and workarounds. Every signal keeps its original source.|Recopila quejas, solicitudes y soluciones alternativas públicas. Cada señal conserva su fuente.|Sammeln Sie öffentliche Beschwerden, Funktionswünsche und Behelfslösungen mit Originalquelle.|Colete reclamações, pedidos e soluções alternativas públicas com suas fontes originais.|公開の不満・機能要望・回避策を出典とともに集めます。|采集公开投诉、功能请求和替代方案，保留原始来源。|Собирайте публичные жалобы, запросы функций и обходные решения. У каждого сигнала сохраняется источник.
+Group related pains, understand who feels them, and separate commercial intent from noise.|Agrupa problemas relacionados, identifica a quién afectan y distingue la intención comercial.|Gruppieren Sie ähnliche Probleme, erkennen Sie Betroffene und kommerzielles Interesse.|Agrupe problemas relacionados, identifique o público e a intenção comercial.|関連する課題をまとめ、対象者と商業的な意図を把握します。|归类相关问题，识别受众和商业意图。|Группируйте похожие проблемы, определяйте аудиторию и отделяйте коммерческий интерес от шума.
+Compare daily snapshots. See whether a problem is accelerating, stable, or fading.|Compara datos diarios y observa si el problema crece, se estabiliza o disminuye.|Vergleichen Sie tägliche Daten: wächst, stagniert oder schrumpft das Problem?|Compare dados diários: o problema cresce, estabiliza ou diminui?|日次データを比較し、課題の成長・安定・減少を確認します。|比较每日数据，判断问题增长、稳定或减弱。|Сравнивайте ежедневные снимки: проблема растёт, остаётся стабильной или затухает.
+Real conversations, original links, transparent scoring. AI helps interpret the evidence — it never invents it.|Conversaciones reales, enlaces originales y puntuación transparente. La IA interpreta la evidencia.|Echte Diskussionen, Originalquellen, transparente Bewertungen. KI interpretiert Belege.|Conversas reais, links originais e avaliações transparentes. A IA interpreta evidências.|実際の会話、元のリンク、透明な評価。AIは証拠を解釈します。|真实讨论、原始链接和透明评分。AI帮助解读证据。|Реальные обсуждения, ссылки на источники и прозрачные оценки. ИИ помогает интерпретировать факты, а не придумывает их.
+Facts, AI inference, and hypotheses clearly labeled|Hechos, inferencias e hipótesis identificados|Fakten, KI-Schlüsse und Hypothesen gekennzeichnet|Fatos, inferências e hipóteses identificados|事実・AI推論・仮説を明示|明确区分事实、AI推断和假设|Факты, выводы ИИ и гипотезы явно обозначены
+Original sources one click away|Fuentes originales a un clic|Originalquellen mit einem Klick|Fontes originais a um clique|元の出典へワンクリック|一键访问原始来源|Исходные источники в одном клике
+Confidence that reflects the sample size|Confianza basada en el tamaño de la muestra|Konfidenz passend zur Stichprobengröße|Confiança baseada no tamanho da amostra|標本の大きさに基づく確信度|置信度反映样本规模|Уверенность с учётом размера выборки
+Open your intelligence workspace ↗|Abre tu espacio de análisis ↗|Analysebereich öffnen ↗|Abra seu espaço de análise ↗|分析ワークスペースを開く ↗|打开分析工作区 ↗|Открыть аналитическое пространство ↗
+Opportunities appear after connected sources provide enough independent signals. No fabricated examples.|Las oportunidades aparecen cuando hay suficientes señales independientes. Sin ejemplos inventados.|Chancen erscheinen bei ausreichend unabhängigen Signalen. Keine erfundenen Beispiele.|Oportunidades aparecem com sinais independentes suficientes. Sem exemplos inventados.|独立したシグナルが十分に集まると機会が表示されます。架空の例はありません。|有足够独立信号后显示机会，没有虚构示例。|Возможности появляются после сбора достаточного количества независимых сигналов. Без выдуманных примеров.
+Track a niche, audience, or keyword. Let the right signals come to you.|Sigue un nicho, público o palabra clave y recibe señales relevantes.|Verfolgen Sie Nischen, Zielgruppen oder Stichwörter für passende Signale.|Acompanhe nichos, públicos ou palavras-chave para receber sinais relevantes.|ニッチ・対象者・キーワードを追跡して関連シグナルを見つけます。|跟踪细分领域、受众或关键词，获取相关信号。|Отслеживайте нишу, аудиторию или ключевое слово и получайте подходящие сигналы.
+Save problems worth following and see how their scores change.|Guarda problemas y observa cómo cambian sus puntuaciones.|Speichern Sie interessante Probleme und verfolgen Sie ihre Bewertungen.|Salve problemas e acompanhe suas pontuações.|課題を保存し、スコアの変化を確認します。|保存值得关注的问题，查看评分变化。|Сохраняйте интересные проблемы и следите за изменениями оценок.
+Frequency, velocity, commercial intent, pain intensity, and freshness.|Frecuencia, crecimiento, intención comercial, intensidad y actualidad.|Häufigkeit, Wachstum, kommerzielles Interesse, Intensität und Aktualität.|Frequência, crescimento, intenção comercial, intensidade e atualidade.|頻度・成長・商業的意図・深刻度・新しさ。|频率、增长、商业意图、问题强度和时效。|Частота, скорость роста, коммерческий интерес, острота проблемы и свежесть данных.
+Snapshots and reports grounded in observed signals, not imagined revenue.|Datos e informes basados en señales observadas.|Daten und Berichte auf Basis beobachteter Signale.|Dados e relatórios baseados em sinais observados.|観測したシグナルに基づくデータとレポート。|基于观察信号的数据和报告。|Снимки и отчёты на основе наблюдаемых сигналов, а не выдуманной выручки.
+Does PainRadar generate startup ideas?|¿PainRadar genera ideas de negocio?|Generiert PainRadar Startup-Ideen?|PainRadar gera ideias de negócios?|PainRadarは事業案を作りますか？|PainRadar会生成创业点子吗？|PainRadar генерирует идеи стартапов?
+It discovers and groups real problems first. MVP suggestions are hypotheses based on those signals, clearly separated from facts.|Primero agrupa problemas reales. Las sugerencias de MVP son hipótesis basadas en señales.|Zuerst werden reale Probleme gruppiert. MVP-Vorschläge sind Hypothesen auf Basis der Signale.|Primeiro agrupa problemas reais. Sugestões de MVP são hipóteses baseadas nos sinais.|まず実際の課題をまとめます。MVP案はシグナルに基づく仮説です。|先发现并归类真实问题，MVP建议是基于信号的假设。|Сначала он находит и группирует реальные проблемы. Предложения MVP — гипотезы на основе сигналов, отдельно от фактов.
+Where does the evidence come from?|¿De dónde viene la evidencia?|Woher stammen die Belege?|De onde vêm as evidências?|証拠はどこから来ますか？|证据来自哪里？|Откуда берутся подтверждения?
+The first adapters collect public data from Hacker News, GitHub Issues, and authorized Reddit API access. Availability depends on source permissions and configuration.|Se recopilan datos públicos de Hacker News, GitHub Issues y acceso autorizado a Reddit, según permisos y configuración.|Öffentliche Daten aus Hacker News, GitHub Issues und autorisiertem Reddit-Zugriff, abhängig von Berechtigungen und Konfiguration.|Dados públicos do Hacker News, GitHub Issues e acesso autorizado ao Reddit, conforme permissões e configuração.|Hacker News、GitHub Issues、認可されたReddit APIから公開データを集めます。利用可否は設定に依存します。|从Hacker News、GitHub Issues和授权Reddit API采集公开数据，取决于权限和配置。|Адаптеры собирают публичные данные Hacker News, GitHub Issues и Reddit через разрешённый API. Доступность зависит от прав и настроек.
+Can a score guarantee demand?|¿La puntuación garantiza demanda?|Garantiert eine Bewertung Nachfrage?|A pontuação garante demanda?|スコアは需要を保証しますか？|评分能保证需求吗？|Оценка гарантирует спрос?
+No. Scores summarize observed signals. Confidence reflects evidence volume, independent authors, source diversity, and freshness. Validate with potential customers before building.|No. La puntuación resume señales. Valida la demanda con clientes antes de crear.|Nein. Bewertungen fassen Signale zusammen. Prüfen Sie die Nachfrage mit Kunden vor der Entwicklung.|Não. Pontuações resumem sinais. Valide a demanda com clientes antes de criar.|いいえ。スコアはシグナルの要約です。開発前に顧客と需要を検証してください。|不能。评分概括观察信号，开发前请向潜在客户验证需求。|Нет. Оценки обобщают сигналы. Уверенность учитывает объём данных, независимых авторов, разнообразие источников и свежесть. До разработки проверьте спрос с клиентами.
+Can I get started for free?|¿Puedo empezar gratis?|Kann ich kostenlos starten?|Posso começar grátis?|無料で始められますか？|可以免费开始吗？|Можно начать бесплатно?
+Yes. The Free plan includes five opportunity opens per day, one custom radar, and seven days of history.|Sí. El plan gratuito incluye cinco oportunidades al día, un radar y siete días de historial.|Ja. Kostenlos: fünf Chancen pro Tag, ein Radar und sieben Tage Verlauf.|Sim. O plano grátis inclui cinco oportunidades por dia, um radar e sete dias de histórico.|はい。無料プランは1日5件の機会、1レーダー、7日分の履歴を含みます。|可以。免费方案包括每天查看5个机会、1个雷达和7天历史。|Да. Бесплатный тариф включает пять открытий возможностей в день, один радар и семь дней истории.
+Find the pain. Follow the evidence. Make something people need.|Encuentra el problema, sigue la evidencia y crea algo útil.|Finden Sie Probleme, folgen Sie Belegen und entwickeln Sie etwas Nützliches.|Encontre o problema, siga as evidências e crie algo útil.|課題を見つけ、証拠を追い、人々に必要なものを作りましょう。|发现问题，跟随证据，创造人们需要的产品。|Найдите проблему. Изучите подтверждения. Создайте то, что нужно людям.
+Create team|Crear equipo|Team erstellen|Criar equipe|チームを作成|创建团队|Создать команду
+Create workspace|Crear espacio|Arbeitsbereich erstellen|Criar espaço|ワークスペースを作成|创建工作区|Создать пространство
+Workspace name|Nombre del espacio|Name des Arbeitsbereichs|Nome do espaço|ワークスペース名|工作区名称|Название пространства
+Client name|Nombre del cliente|Kundenname|Nome do cliente|顧客名|客户名称|Имя клиента
+Report brand name|Marca del informe|Berichtsmarke|Marca do relatório|レポートのブランド名|报告品牌名称|Бренд отчёта
+Brand color|Color de marca|Markenfarbe|Cor da marca|ブランドカラー|品牌颜色|Цвет бренда
+Agency name|Nombre de agencia|Agenturname|Nome da agência|代理店名|机构名称|Название агентства
+Create invitation|Crear invitación|Einladung erstellen|Criar convite|招待を作成|创建邀请|Создать приглашение
+Recipient email|Correo del destinatario|Empfänger-E-Mail|E-mail do destinatário|招待先メール|收件人邮箱|Почта получателя
+Member|Miembro|Mitglied|Membro|メンバー|成员|Участник
+Administrator|Administrador|Administrator|Administrador|管理者|管理员|Администратор
+Integration name|Nombre de integración|Integrationsname|Nome da integração|連携名|集成名称|Название интеграции
+Public HTTPS endpoint|Endpoint HTTPS público|Öffentlicher HTTPS-Endpunkt|Endpoint HTTPS público|公開HTTPSエンドポイント|公共HTTPS端点|Публичный HTTPS-адрес
+Create webhook|Crear webhook|Webhook erstellen|Criar webhook|Webhookを作成|创建Webhook|Создать вебхук
+Save branding|Guardar marca|Marke speichern|Salvar marca|ブランド設定を保存|保存品牌设置|Сохранить оформление
+Update client access|Actualizar acceso|Kundenzugriff aktualisieren|Atualizar acesso|顧客アクセスを更新|更新客户访问|Обновить доступ клиента
+Team member|Miembro del equipo|Teammitglied|Membro da equipe|チームメンバー|团队成员|Участник команды
+Workspace role|Rol en el espacio|Arbeitsbereichsrolle|Função no espaço|ワークスペースの権限|工作区角色|Роль в пространстве
+Viewer|Lector|Betrachter|Leitor|閲覧者|查看者|Наблюдатель
+Editor|Editor|Bearbeiter|Editor|編集者|编辑者|Редактор
+Remove assignment|Eliminar asignación|Zuweisung entfernen|Remover atribuição|割り当てを解除|移除分配|Убрать назначение
+Role|Rol|Rolle|Função|権限|角色|Роль
+Save changes|Guardar cambios|Änderungen speichern|Salvar alterações|変更を保存|保存更改|Сохранить изменения
+Create radar →|Crear radar →|Radar erstellen →|Criar radar →|レーダーを作成 →|创建雷达 →|Создать радар →
+Radar updated. Alerts will use the saved filters.|Radar actualizado. Las alertas usarán los filtros guardados.|Radar aktualisiert. Meldungen verwenden die gespeicherten Filter.|Radar atualizado. Alertas usarão os filtros salvos.|レーダーを更新しました。保存した条件で通知します。|雷达已更新，通知将使用已保存的筛选。|Радар обновлён. Уведомления используют сохранённые фильтры.
+Radar created. Alerts will follow matching evidence.|Radar creado. Las alertas seguirán la evidencia coincidente.|Radar erstellt. Meldungen verfolgen passende Belege.|Radar criado. Alertas seguirão evidências correspondentes.|レーダーを作成しました。条件に合う証拠を通知します。|雷达已创建，通知将跟踪匹配证据。|Радар создан. Уведомления отслеживают подходящие подтверждения.
+By continuing, you agree to our|Al continuar, aceptas nuestros|Mit der Fortsetzung akzeptieren Sie unsere|Ao continuar, você concorda com nossos|続行すると以下に同意します：|继续即表示您同意我们的|Продолжая, вы соглашаетесь с документами:
+and|y|und|e|および|和|и
+5 opportunities per day|5 oportunidades al día|5 Chancen pro Tag|5 oportunidades por dia|1日5件の機会|每天5个机会|5 возможностей в день
+1 custom radar|1 radar personalizado|1 eigenes Radar|1 radar personalizado|1つのカスタムレーダー|1个自定义雷达|1 персональный радар
+7-day history|Historial de 7 días|7 Tage Verlauf|Histórico de 7 dias|7日分の履歴|7天历史|История за 7 дней
+Original evidence links|Enlaces a evidencia original|Links zu Originalbelegen|Links para evidências originais|元の証拠へのリンク|原始证据链接|Ссылки на исходные подтверждения
+Unlimited opportunities|Oportunidades ilimitadas|Unbegrenzte Chancen|Oportunidades ilimitadas|機会の閲覧が無制限|无限机会|Безлимитные возможности
+10 custom radars|10 radares personalizados|10 eigene Radare|10 radares personalizados|10のカスタムレーダー|10个自定义雷达|10 персональных радаров
+90-day history|Historial de 90 días|90 Tage Verlauf|Histórico de 90 dias|90日分の履歴|90天历史|История за 90 дней
+CSV exports & email alerts|Exportaciones CSV y alertas por correo|CSV-Export und E-Mail-Meldungen|Exportações CSV e alertas por e-mail|CSV出力とメール通知|CSV导出和邮件通知|Экспорт CSV и уведомления по почте
+Unlimited radars|Radares ilimitados|Unbegrenzte Radare|Radares ilimitados|無制限のレーダー|无限雷达|Безлимитные радары
+Competitor evidence research|Investigación de competencia|Wettbewerbsrecherche|Pesquisa de concorrentes|競合調査|竞争对手研究|Исследование конкурентов
+AI MVP generator|Generador MVP con IA|KI-MVP-Generator|Gerador de MVP com IA|AIによるMVP案|AI生成MVP|Генератор MVP с ИИ
+API access & reports|Acceso API e informes|API-Zugriff und Berichte|Acesso API e relatórios|APIアクセスとレポート|API访问和报告|API и отчёты
+1 team, up to 50 members & 100 clients|1 equipo, hasta 50 miembros y 100 clientes|1 Team, bis zu 50 Mitglieder und 100 Kunden|1 equipe, até 50 membros e 100 clientes|1チーム、最大50人と100顧客|1个团队，最多50名成员和100名客户|1 команда, до 50 участников и 100 клиентов
+Shared watchlists & 100 radars per client|Listas compartidas y 100 radares por cliente|Geteilte Merklisten und 100 Radare pro Kunde|Listas compartilhadas e 100 radares por cliente|共有リストと顧客ごとに100レーダー|共享关注列表，每客户100个雷达|Общее избранное и 100 радаров на клиента
+White-label reports & scoped API keys|Informes de marca y claves API limitadas|Berichte mit eigener Marke und begrenzte API-Schlüssel|Relatórios com marca própria e chaves API restritas|独自ブランドのレポートと限定APIキー|自有品牌报告和限定API密钥|Отчёты под вашим брендом и API-ключи с ограниченными правами
+Signed webhooks with delivery retries|Webhooks firmados con reintentos|Signierte Webhooks mit Wiederholungen|Webhooks assinados com novas tentativas|署名付きWebhookと再送|签名Webhook和重试|Подписанные вебхуки с повторной доставкой
+month|mes|Monat|mês|月|月|месяц
+Not enough historical snapshots yet.|Aún no hay suficiente historial.|Noch nicht genug Verlaufsdaten.|Ainda não há histórico suficiente.|履歴データが不足しています。|历史数据不足。|Пока недостаточно исторических снимков.
+Daily observed mentions|Menciones diarias observadas|Täglich beobachtete Erwähnungen|Menções diárias observadas|日次の言及数|每日观察提及数|Наблюдаемые упоминания за день
+snapshots|registros|Momentaufnahmen|registros|記録|快照|снимков
+Retry|Reintentar|Erneut versuchen|Tentar novamente|再試行|重试|Повторить
+Loading sessions…|Cargando sesiones…|Sitzungen laden…|Carregando sessões…|セッションを読み込み中…|加载会话…|Загружаем сессии…
+No active sessions found.|No hay sesiones activas.|Keine aktiven Sitzungen gefunden.|Nenhuma sessão ativa.|有効なセッションはありません。|未找到活跃会话。|Активных сессий нет.
+This device|Este dispositivo|Dieses Gerät|Este dispositivo|このデバイス|此设备|Это устройство
+Other device|Otro dispositivo|Anderes Gerät|Outro dispositivo|他のデバイス|其他设备|Другое устройство
+Browser details unavailable|Detalles del navegador no disponibles|Browserdetails nicht verfügbar|Detalhes do navegador indisponíveis|ブラウザー情報は不明です|浏览器信息不可用|Информация о браузере недоступна
+End session|Cerrar sesión|Sitzung beenden|Encerrar sessão|セッションを終了|结束会话|Завершить сессию
+Ending…|Cerrando…|Wird beendet…|Encerrando…|終了中…|正在结束…|Завершаем…
+Change password|Cambiar contraseña|Passwort ändern|Alterar senha|パスワードを変更|修改密码|Изменить пароль
+New|Nueva|Neu|Nova|新規|新|Новая
+Growing|Creciendo|Wachsend|Crescendo|成長中|增长中|Растёт
+Surging|En auge|Stark wachsend|Em alta|急成長|快速增长|Быстро растёт
+Declining|Disminuyendo|Abnehmend|Diminuindo|減少中|下降中|Снижается
+Stable|Estable|Stabil|Estável|安定|稳定|Стабильна
+Accelerating|Acelerando|Beschleunigend|Acelerando|加速中|加速中|Ускоряется
 `;
 export const messages: Record<
   string,

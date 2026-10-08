@@ -1,10 +1,11 @@
 "use client";
-import { Text } from "@/components/language-provider";
+import { Text, useTranslation } from "@/components/language-provider";
 
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { Button } from "./ui/button";
 export function VerifyForm() {
+  const t = useTranslation();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [ok, setOk] = useState(false);
@@ -46,16 +47,16 @@ export function VerifyForm() {
         />
       </div>
       <Button disabled={busy}>
-        {busy ? "Sending…" : "Send verification link"}
+        {t(busy ? "Sending…" : "Send verification link")}
       </Button>
       {ok && (
         <p className="success-message" role="status">
-          If your account needs verification, a link will be sent.
+          <Text value="If your account needs verification, a link will be sent." />
         </p>
       )}
       {error && (
         <p className="error-message" role="alert">
-          {error}
+          {t(error)}
         </p>
       )}
     </form>
