@@ -1,3 +1,7 @@
+import {
+  GET as grantGet,
+  POST as grantPost,
+} from "@/app/api/admin/subscriptions/route";
 import { POST as collectPost } from "@/app/api/admin/collect/route";
 import { PATCH as radarPatch } from "@/app/api/radars/route";
 import { POST as maintenancePost } from "@/app/api/admin/maintenance/route";
@@ -185,4 +189,21 @@ it("reports missing collection setup before sending background jobs", async () =
     if (eventKey !== undefined) process.env.INNGEST_EVENT_KEY = eventKey;
     if (signingKey !== undefined) process.env.INNGEST_SIGNING_KEY = signingKey;
   }
+});
+
+it("protects manual subscription lookups and mutations", async () => {
+  const req = new Request(
+    "https://painradar.example/api/admin/subscriptions?email=a@test.dev",
+  );
+  expect((await grantGet(req)).status).toBe(401);
+  const post = () =>
+    new Request(req.url, {
+      method: "POST",
+      headers: { origin: "https://painradar.example" },
+      body: "{}",
+    });
+  expect((await grantPost(post())).status).toBe(401);
+  session.value = { user: { id: "ordinary", role: "user" } };
+  expect((await grantGet(req)).status).toBe(403);
+  expect((await grantPost(post())).status).toBe(403);
 });

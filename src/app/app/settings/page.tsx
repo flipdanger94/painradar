@@ -1,3 +1,5 @@
+import { manualGrant } from "@/lib/subscription-grants";
+import { userPlan } from "@/lib/security";
 import { Text } from "@/components/language-provider";
 
 import { formatStripeInvoiceAmount } from "@/lib/stripe-amount";
@@ -39,6 +41,10 @@ export default async function Page({
       .from(subscriptions)
       .where(eq(subscriptions.userId, s.user.id))
   )[0];
+  const [grant, effectivePlan] = await Promise.all([
+    manualGrant(s.user.id),
+    userPlan(s.user.id),
+  ]);
   const keys = await db()
     .select()
     .from(apiKeys)
@@ -85,7 +91,21 @@ export default async function Page({
             <Text value={"Subscription"} />
           </h2>
           <p>
-            {sub?.plan || "Free"} · {sub?.status || "No paid subscription"}
+            <Text value="Active plan" />: {effectivePlan}
+          </p>
+          {grant && (
+            <p>
+              <Text value="Manual access" />: {grant.plan} ·{" "}
+              {grant.expiresAt ? (
+                grant.expiresAt.toISOString().slice(0, 10) + " (UTC)"
+              ) : (
+                <Text value="Lifetime" />
+              )}
+            </p>
+          )}
+          <p>
+            Stripe: {sub?.plan || "Free"} ·{" "}
+            {sub?.status || "No paid subscription"}
           </p>
           {sub?.cancelAtPeriodEnd && (
             <p>Cancellation scheduled at the current period end.</p>

@@ -30,7 +30,7 @@ export async function sendAlertEmails() {
       and(
         isNull(notifications.emailedAt),
         sql`${notifications.createdAt}>now()-interval '7 days'`,
-        sql`((${notifications.workspaceId} is not null and workspace_role(${notifications.workspaceId},${notifications.userId}) is not null) or (${notifications.workspaceId} is null and exists(select 1 from subscriptions sub where sub.user_id=${notifications.userId} and sub.plan in ('pro','founder','agency') and sub.status in ('active','trialing') and (sub.current_period_end is null or sub.current_period_end>now()))))`,
+        sql`((${notifications.workspaceId} is not null and workspace_role(${notifications.workspaceId},${notifications.userId}) is not null) or (${notifications.workspaceId} is null and (exists(select 1 from subscriptions sub where sub.user_id=${notifications.userId} and sub.plan in ('pro','founder','agency') and sub.status in ('active','trialing') and (sub.current_period_end is null or sub.current_period_end>now())) or exists(select 1 from subscription_grants g where g.user_id=${notifications.userId} and g.revoked_at is null and (g.expires_at is null or g.expires_at>now())))))`,
       ),
     )
     .orderBy(notifications.createdAt, notifications.id)
