@@ -230,9 +230,11 @@ export function RadarForm({
       )}
       {success && (
         <p className="success-message" role="status">
-          {radar
-            ? "Radar updated. Alerts will use the saved filters."
-            : "Radar created. Alerts will follow matching evidence."}
+          {t(
+            radar
+              ? "Radar updated. Alerts will use the saved filters."
+              : "Radar created. Alerts will follow matching evidence.",
+          )}
         </p>
       )}
       <Button disabled={busy}>

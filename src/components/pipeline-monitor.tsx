@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import {
   Activity,
@@ -150,11 +151,14 @@ export function PipelineMonitor({
           <li
             key={key}
             className={
-              running && i === index
-                ? "current"
-                : data.job?.status === "completed" || (index >= 0 && i < index)
-                  ? "finished"
-                  : ""
+              data.job?.status === "failed" && i === index
+                ? "failed"
+                : running && i === index
+                  ? "current"
+                  : data.job?.status === "completed" ||
+                      (index >= 0 && i < index)
+                    ? "finished"
+                    : ""
             }
           >
             <span>{i + 1}</span>
@@ -208,11 +212,13 @@ export function PipelineMonitor({
             {c.awaitingGrouping} {t("Signals waiting for related evidence")}
           </p>
         )}
-        <p>
-          {t(
-            "Free-tier runs pause between AI requests; this may take several minutes.",
-          )}
-        </p>
+        {data.freeTier && (
+          <p>
+            {t(
+              "Free-tier runs pause between AI requests; this may take several minutes.",
+            )}
+          </p>
+        )}
       </div>
       {!data.configured && (
         <p role="alert">
@@ -292,6 +298,9 @@ export function PipelineMonitor({
           </article>
         ))}
       </div>
+      <Link className="text-link signal-browse-link" href="/app/signals">
+        {t("Browse all signals →")}
+      </Link>
       {data.recent.length > 0 && (
         <details className="recent-signals">
           <summary>{t("Latest signals")}</summary>

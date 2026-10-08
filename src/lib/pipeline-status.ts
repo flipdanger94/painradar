@@ -1,7 +1,8 @@
 import { db, databaseReady } from "@/db";
 import { jobRuns, sources } from "@/db/schema";
 import { desc, eq, sql } from "drizzle-orm";
-import { embeddingModel } from "./gemini";
+import { pipelineError } from "./pipeline-errors";
+import { embeddingModel, freeTier } from "./gemini";
 import { PIPELINE_LIMITS } from "./analysis-batches";
 export type PipelineStage =
   "collect" | "embed" | "group" | "analyze" | "publish" | "done";
@@ -54,15 +55,14 @@ export async function pipelineStatus() {
           startedAt: job.createdAt.toISOString(),
           finishedAt: job.finishedAt?.toISOString() || null,
           progress: job.progress,
-          error: job.error
-            ? "Processing failed. Review the job in Inngest before restarting."
-            : null,
+          error: job.error ? pipelineError(job.error) : null,
         }
       : null,
     limits: {
       embeddings: PIPELINE_LIMITS.embeddings,
       seeds: PIPELINE_LIMITS.seeds,
     },
+    freeTier: freeTier(),
     configured:
       !!process.env.GEMINI_API_KEY &&
       !!process.env.INNGEST_EVENT_KEY &&

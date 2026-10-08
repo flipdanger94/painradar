@@ -19,6 +19,7 @@ import {
   planGroupingBatch,
   commitGroupingBatch,
 } from "./analysis-batches";
+import { pipelineError } from "./pipeline-errors";
 import { recordProgress } from "./pipeline-status";
 import { Inngest } from "inngest";
 import { embeddingModel, freeTier } from "./gemini";
@@ -43,7 +44,7 @@ export const dailyPipeline = inngest.createFunction(
         .update(jobRuns)
         .set({
           status: "failed",
-          error: "Background pipeline exhausted retries",
+          error: pipelineError(String(event.data.error?.message || "")),
           finishedAt: new Date(),
         })
         .where(

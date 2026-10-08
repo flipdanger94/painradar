@@ -1,10 +1,15 @@
+import { Text } from "./language-provider";
 export function GrowthChart({
   rows,
 }: {
   rows: { day: string; mentions: number; score: number }[];
 }) {
   if (rows.length < 2)
-    return <p className="text-small">Not enough historical snapshots yet.</p>;
+    return (
+      <p className="text-small">
+        <Text value="Not enough historical snapshots yet." />
+      </p>
+    );
   const max = Math.max(...rows.map((r) => r.mentions), 1);
   const path = rows
     .map(
@@ -29,7 +34,8 @@ export function GrowthChart({
         </text>
       </svg>
       <figcaption className="text-small muted">
-        Daily observed mentions · {rows.length} snapshots
+        <Text value="Daily observed mentions" /> · {rows.length}{" "}
+        <Text value="snapshots" />
       </figcaption>
     </figure>
   );

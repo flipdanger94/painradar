@@ -1,4 +1,5 @@
 "use client";
+import { useTranslation } from "./language-provider";
 import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "./ui/button";
@@ -24,6 +25,7 @@ export function TeamForm({
   method?: string;
   resultKey?: string;
 }) {
+  const t = useTranslation();
   const id = useId();
   const router = useRouter();
   const [busy, setBusy] = useState(false);
@@ -58,12 +60,12 @@ export function TeamForm({
     >
       {fields.map((f) => (
         <div key={f.name}>
-          <label htmlFor={id + f.name}>{f.label}</label>
+          <label htmlFor={id + f.name}>{t(f.label)}</label>
           {f.options ? (
             <select id={id + f.name} name={f.name} defaultValue={f.value}>
               {f.options.map((o) => (
                 <option key={o.value} value={o.value}>
-                  {o.label}
+                  {t(o.label)}
                 </option>
               ))}
             </select>
@@ -81,16 +83,16 @@ export function TeamForm({
           )}
         </div>
       ))}
-      <Button disabled={busy}>{busy ? "Saving…" : label}</Button>
+      <Button disabled={busy}>{t(busy ? "Saving…" : label)}</Button>
       {error && (
         <p className="error-message" role="alert">
-          {error}
+          {t(error)}
         </p>
       )}
       {result && (
         <p className="notice wrap" role="status">
-          {resultKey ? "Copy this value now: " : ""}
-          {result}
+          {resultKey ? t("Copy this value now:") + " " : ""}
+          {resultKey ? result : t(result)}
         </p>
       )}
     </form>
