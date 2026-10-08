@@ -1,7 +1,17 @@
+import Link from "next/link";
+import { getSession } from "@/lib/auth";
 import { databaseReady, db } from "@/db";
 import { sources } from "@/db/schema";
 export default async function Page() {
-  const rows = databaseReady() ? await db().select().from(sources) : [];
+  const configured = databaseReady();
+  const [rows, session] = await Promise.all([
+    configured ? db().select().from(sources) : Promise.resolve([]),
+    getSession(),
+  ]);
+  const admin = session?.user.role === "admin";
+  const collectionReady =
+    !!process.env.INNGEST_EVENT_KEY && !!process.env.INNGEST_SIGNING_KEY;
+  const analysisReady = !!process.env.OPENAI_API_KEY;
   const list = [
     {
       id: "hn",
@@ -32,6 +42,39 @@ export default async function Page() {
           </p>
         </div>
       </div>
+      {(!configured || !rows.length || !collectionReady || !analysisReady) && (
+        <section className="notice" style={{ marginBottom: 24 }}>
+          <h2>Data collection setup</h2>
+          <p>
+            {!configured
+              ? "The database is not configured."
+              : !rows.length
+                ? "No sources have been configured yet. Collection has not started."
+                : "Source configuration is saved."}
+          </p>
+          <p>
+            {collectionReady
+              ? "Background job keys are configured; the job service must also be connected to this app."
+              : "Background collection is not configured. The administrator must connect Inngest and configure its event and signing keys."}
+          </p>
+          {!analysisReady && (
+            <p>
+              AI analysis is not configured. The administrator must configure
+              OpenAI before opportunities can be analyzed.
+            </p>
+          )}
+          {admin ? (
+            <Link className="text-link" href="/admin">
+              Configure sources in Admin →
+            </Link>
+          ) : (
+            <p>
+              Ask your administrator to complete setup and start the first
+              collection.
+            </p>
+          )}
+        </section>
+      )}
       <div className="sources-grid">
         {list.map((source) => {
           const state = rows.find((r) => r.id === source.id);
@@ -39,11 +82,17 @@ export default async function Page() {
             <article className="source-card" key={source.id}>
               <h3>{source.name}</h3>
               <span className="badge">
-                {state?.enabled ? state.health : "Not connected"}
+                {!state
+                  ? "Not configured"
+                  : !state.enabled
+                    ? "Disabled"
+                    : !state.lastCollectedAt
+                      ? "Awaiting first collection"
+                      : state.health}
               </span>
               <p>{source.description}</p>
               <p className="text-small">
-                Completed through:{" "}
+                Collection completed through:{" "}
                 {state?.lastCollectedAt
                   ?.toISOString()
                   .slice(0, 16)
