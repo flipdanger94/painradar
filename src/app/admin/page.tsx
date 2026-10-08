@@ -1,3 +1,4 @@
+import { SubscriptionGrantForm } from "@/components/subscription-grant-form";
 import { Text } from "@/components/language-provider";
 
 import { PipelineMonitor } from "@/components/pipeline-monitor";
@@ -298,6 +299,7 @@ export default async function Page() {
               <p>No job runs yet.</p>
             )}
           </section>
+          <SubscriptionGrantForm />
           <section className="panel detail-block">
             <h2>
               <Text value={"Recent users"} />

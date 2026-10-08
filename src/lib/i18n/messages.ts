@@ -461,6 +461,31 @@ Surging|En auge|Stark wachsend|Em alta|急成長|快速增长|Быстро ра�
 Declining|Disminuyendo|Abnehmend|Diminuindo|減少中|下降中|Снижается
 Stable|Estable|Stabil|Estável|安定|稳定|Стабильна
 Accelerating|Acelerando|Beschleunigend|Acelerando|加速中|加速中|Ускоряется
+Manual subscriptions|Suscripciones manuales|Manuelle Abonnements|Assinaturas manuais|手動サブスクリプション|手动订阅|Ручные подписки
+Grant access without charging the user. Stripe billing stays separate; the higher active plan applies.|Otorga acceso sin cobrar al usuario. Stripe sigue separado; se aplica el plan activo superior.|Zugang ohne Zahlung gewähren. Stripe bleibt separat; der höhere aktive Tarif gilt.|Conceda acesso sem cobrar. Stripe permanece separado; vale o plano ativo superior.|課金せずアクセスを付与します。Stripeとは別管理で、有効な上位プランが適用されます。|免费授予访问权限。Stripe独立管理，采用较高的有效套餐。|Выдайте доступ без оплаты. Подписка Stripe учитывается отдельно; действует более высокий активный тариф.
+User email|Correo del usuario|Benutzer-E-Mail|Email do usuário|ユーザーのメール|用户邮箱|Email пользователя
+Find user|Buscar usuario|Benutzer suchen|Buscar usuário|ユーザー検索|查找用户|Найти пользователя
+Manual access|Acceso manual|Manueller Zugang|Acesso manual|手動アクセス|手动访问权限|Ручной доступ
+No active manual subscription.|No hay suscripción manual activa.|Kein aktives manuelles Abonnement.|Nenhuma assinatura manual ativa.|有効な手動サブスクリプションはありません。|没有有效的手动订阅。|Нет действующей ручной подписки.
+This subscription is already lifetime.|Esta suscripción ya es vitalicia.|Dieses Abonnement ist bereits unbefristet.|Esta assinatura já é vitalícia.|このサブスクリプションは無期限です。|此订阅已是永久订阅。|Эта подписка уже бессрочная.
+User not found.|Usuario no encontrado.|Benutzer nicht gefunden.|Usuário não encontrado.|ユーザーが見つかりません。|未找到用户。|Пользователь не найден.
+Enter a valid email.|Introduce un correo válido.|Gültige E-Mail eingeben.|Informe um email válido.|有効なメールを入力してください。|请输入有效邮箱。|Введите корректный email.
+Grant or replace access|Otorgar o reemplazar acceso|Zugang gewähren oder ersetzen|Conceder ou substituir acesso|アクセス付与・変更|授予或替换访问权限|Выдать или заменить доступ
+Extend access|Ampliar acceso|Zugang verlängern|Prorrogar acesso|アクセス延長|延长访问权限|Продлить доступ
+Revoke manual access|Revocar acceso manual|Manuellen Zugang widerrufen|Revogar acesso manual|手動アクセス取消|撤销手动访问权限|Отозвать ручной доступ
+Grant access|Otorgar acceso|Zugang gewähren|Conceder acesso|アクセス付与|授予访问权限|Выдать доступ
+Duration|Duración|Dauer|Duração|期間|期限|Срок
+Lifetime|Vitalicio|Unbefristet|Vitalício|無期限|永久|Бессрочно
+Reason|Motivo|Grund|Motivo|理由|原因|Причина
+Days are added to the current expiration date.|Los días se suman a la fecha de vencimiento actual.|Tage werden zum aktuellen Ablaufdatum hinzugefügt.|Os dias são adicionados à data de vencimento atual.|現在の有効期限に日数を追加します。|天数将加到当前到期日。|Дни добавляются к текущей дате окончания.
+Only manual access will be revoked. Stripe payments will continue.|Solo se revoca el acceso manual. Los pagos de Stripe continúan.|Nur manueller Zugang wird widerrufen. Stripe-Zahlungen laufen weiter.|Somente o acesso manual será revogado. Os pagamentos Stripe continuam.|手動アクセスのみ取り消します。Stripeの支払いは継続します。|仅撤销手动访问权限，Stripe付款将继续。|Будет отозван только ручной доступ. Платежи Stripe продолжатся.
+This replaces existing manual access. The term starts now.|Reemplaza el acceso manual actual. El plazo empieza ahora.|Ersetzt den bestehenden manuellen Zugang. Die Laufzeit beginnt jetzt.|Substitui o acesso manual atual. O prazo começa agora.|既存の手動アクセスを置き換えます。期間は今から開始します。|替换现有手动访问权限，期限从现在开始。|Заменяет существующий ручной доступ. Срок начинается сейчас.
+Access history|Historial de acceso|Zugangsverlauf|Histórico de acesso|アクセス履歴|访问权限历史|История доступа
+No access changes yet.|Aún no hay cambios de acceso.|Noch keine Zugangsänderungen.|Ainda não há alterações de acesso.|アクセス変更はまだありません。|暂无访问权限变更。|Изменений доступа пока нет.
+Access until|Acceso hasta|Zugang bis|Acesso até|有効期限|有效至|Доступ до
+Subscription updated.|Suscripción actualizada.|Abonnement aktualisiert.|Assinatura atualizada.|サブスクリプションを更新しました。|订阅已更新。|Подписка обновлена.
+Active plan|Plan activo|Aktiver Tarif|Plano ativo|有効なプラン|有效套餐|Действующий тариф
+Invalid subscription request.|Solicitud de suscripción inválida.|Ungültige Abonnementanfrage.|Solicitação de assinatura inválida.|無効なサブスクリプション要求です。|无效的订阅请求。|Некорректные данные подписки.
 `;
 export const messages: Record<
   string,

@@ -762,3 +762,19 @@ export const maintenanceRuns = pgTable("maintenance_runs", {
   result: jsonb("result").$type<Record<string, unknown>>().notNull(),
   createdAt: created(),
 });
+
+export const subscriptionGrants = pgTable("subscription_grants", {
+  userId: text("user_id")
+    .primaryKey()
+    .references(() => users.id, { onDelete: "cascade" }),
+  plan: text("plan").notNull(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }),
+  revokedAt: timestamp("revoked_at", { withTimezone: true }),
+  grantedBy: text("granted_by").references(() => users.id, {
+    onDelete: "set null",
+  }),
+  reason: text("reason").notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});

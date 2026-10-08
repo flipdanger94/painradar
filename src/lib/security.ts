@@ -5,6 +5,7 @@ import { getSession } from "./auth";
 import { db } from "@/db";
 import { subscriptions, auditLogs } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import { manualGrant } from "./subscription-grants";
 import { plans, type Plan } from "./plans";
 export class ApiError extends Error {
   constructor(
@@ -32,12 +33,18 @@ export async function userPlan(userId: string): Promise<Plan> {
       .from(subscriptions)
       .where(eq(subscriptions.userId, userId))
   )[0];
-  return row &&
+  const grant = await manualGrant(userId);
+  const paid =
+    row &&
     ["active", "trialing"].includes(row.status) &&
     (!row.currentPeriodEnd || row.currentPeriodEnd.getTime() > Date.now()) &&
     row.plan in plans
-    ? (row.plan as Plan)
-    : "free";
+      ? (row.plan as Plan)
+      : "free";
+  const rank: Plan[] = ["free", "pro", "founder", "agency"];
+  return grant && rank.indexOf(grant.plan as Plan) > rank.indexOf(paid)
+    ? (grant.plan as Plan)
+    : paid;
 }
 export function assertOrigin(req: Request) {
   if (["GET", "HEAD", "OPTIONS"].includes(req.method)) return;
