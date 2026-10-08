@@ -1,3 +1,4 @@
+import { sourceError } from "./sources/errors";
 import { db, databaseReady } from "@/db";
 import { jobRuns, sources } from "@/db/schema";
 import { desc, eq, sql } from "drizzle-orm";
@@ -72,9 +73,7 @@ export async function pipelineStatus() {
       name: s.name,
       enabled: s.enabled,
       health: s.health,
-      error: s.lastError
-        ? "Source request failed. Check access and configuration."
-        : null,
+      error: s.lastError ? sourceError(s.id, s.lastError) : null,
       signals: Number(
         sourceCounts.rows.find((r) => r.source === s.id)?.signals || 0,
       ),

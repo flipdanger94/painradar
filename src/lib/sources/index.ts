@@ -277,7 +277,10 @@ type RedditPost = {
   subreddit: string;
 };
 async function redditToken() {
-  if (!process.env.REDDIT_CLIENT_ID || !process.env.REDDIT_CLIENT_SECRET)
+  if (
+    !process.env.REDDIT_CLIENT_ID?.trim() ||
+    !process.env.REDDIT_CLIENT_SECRET?.trim()
+  )
     throw new Error("Authorized Reddit API credentials required");
   const r = await fetch("https://www.reddit.com/api/v1/access_token", {
     method: "POST",
@@ -293,8 +296,11 @@ async function redditToken() {
     body: "grant_type=client_credentials",
     signal: AbortSignal.timeout(20000),
   });
-  if (!r.ok) throw new Error("Reddit authorization failed");
-  return (await r.json()).access_token as string;
+  if (!r.ok) throw new Error(`Reddit authorization failed (HTTP ${r.status})`);
+  const data = await r.json();
+  if (typeof data.access_token !== "string" || !data.access_token.trim())
+    throw new Error("Invalid Reddit token response");
+  return data.access_token as string;
 }
 const reddit: SourceAdapter<RedditPost> = {
   id: "reddit",
