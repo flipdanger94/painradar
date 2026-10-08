@@ -1361,3 +1361,22 @@ h3 {
 .evidence-card a {
   overflow-wrap: anywhere;
 }
+
+.notification-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-block: 16px;
+}
+.notification-controls nav {
+  margin-block: 0;
+}
+.notification-controls [aria-current="page"] {
+  border-color: var(--accent);
+}
+
+.notification-date {
+  display: block;
+  margin-block: 8px;
+}
