@@ -8,6 +8,7 @@ import { BillingButton } from "@/components/billing-button";
 import { ApiKeyForm } from "@/components/api-key-form";
 import { ApiButton } from "@/components/actions";
 import { EmptyState } from "@/components/empty-state";
+import { AccountSettings } from "@/components/account-settings";
 export default async function Page({
   searchParams,
 }: {
@@ -67,17 +68,13 @@ export default async function Page({
           <p>Your account, subscription, and API access.</p>
         </div>
       </div>
+      <AccountSettings
+        name={s.user.name}
+        email={s.user.email}
+        verified={s.user.emailVerified}
+      />
       <div className="settings-grid">
         <section className="panel detail-block">
-          <h2>Your account</h2>
-          <p>
-            {s.user.name}
-            <br />
-            {s.user.email}
-          </p>
-          <p className="text-small">
-            Email verified: {s.user.emailVerified ? "Yes" : "No"}
-          </p>
           <h2>Subscription</h2>
           <p>
             {sub?.plan || "Free"} · {sub?.status || "No paid subscription"}

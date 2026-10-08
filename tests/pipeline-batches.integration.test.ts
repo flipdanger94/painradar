@@ -169,7 +169,9 @@ describe("Production pipeline SQL against PostgreSQL", () => {
     const output = vi.spyOn(console, "log").mockImplementation(() => {});
     try {
       process.argv = ["node", "reclassify-languages", "--limit=2"];
-      await import("../scripts/reclassify-languages");
+      await (
+        await import("../scripts/reclassify-languages")
+      ).completion;
       expect(JSON.parse(String(output.mock.calls.at(-1)![0]))).toMatchObject({
         dryRun: true,
         scanned: 2,
@@ -193,7 +195,9 @@ describe("Production pipeline SQL against PostgreSQL", () => {
       };
       vi.resetModules();
       process.argv = ["node", "reclassify-languages", "--limit=2", "--apply"];
-      await import("../scripts/reclassify-languages");
+      await (
+        await import("../scripts/reclassify-languages")
+      ).completion;
       expect(JSON.parse(String(output.mock.calls.at(-1)![0]))).toMatchObject({
         dryRun: false,
         scanned: 2,

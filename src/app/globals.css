@@ -987,6 +987,18 @@ footer .brand-beta {
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
+.settings-grid > * {
+  min-width: 0;
+}
+.account-settings {
+  margin-bottom: 20px;
+}
+.session-description {
+  min-width: 0;
+}
+.account-settings input {
+  width: 100%;
+}
 .text-small {
   font-size: 12px;
 }
