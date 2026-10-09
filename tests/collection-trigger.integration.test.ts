@@ -94,4 +94,70 @@ describe("collection request reservation", () => {
     expect((await POST(request({}))).status).toBe(403);
     state.role = "admin";
   });
+  it("refuses to recover a live job, but releases a stalled job and reserves one replacement", async () => {
+    await state.pg!.query(
+      "update job_runs set status='completed' where status in ('running','queued')",
+    );
+    await state.pg!.query(
+      "insert into job_runs(id,job,status) values('live-recovery','daily-radar','running')",
+    );
+    expect(
+      (
+        await POST(
+          request({ recoverJobId: "live-recovery", collectSources: false }),
+        )
+      ).status,
+    ).toBe(409);
+    await state.pg!.query(
+      "update job_runs set created_at=now()-interval '2 hours' where id='live-recovery'",
+    );
+    state.send.mockResolvedValue({ ids: ["replacement"] });
+    expect(
+      (
+        await POST(
+          request({ recoverJobId: "live-recovery", collectSources: false }),
+        )
+      ).status,
+    ).toBe(200);
+    expect(
+      (
+        await state.pg!.query(
+          "select status,finished_at is not null as finished from job_runs where id='live-recovery'",
+        )
+      ).rows,
+    ).toEqual([{ status: "failed", finished: true }]);
+    expect(
+      (
+        await POST(
+          request({ recoverJobId: "live-recovery", collectSources: false }),
+        )
+      ).status,
+    ).toBe(409);
+    expect(
+      (
+        await state.pg!.query(
+          "select id from job_runs where status in ('queued','running')",
+        )
+      ).rows,
+    ).toHaveLength(1);
+  });
+  it("keeps an old run active when it has recent progress", async () => {
+    await state.pg!.query(
+      "update job_runs set status='completed' where status in ('running','queued')",
+    );
+    await state.pg!.query(
+      "insert into job_runs(id,job,status,created_at,progress) values('heartbeat-recovery','daily-radar','running',now()-interval '2 hours',$1)",
+      [
+        JSON.stringify({
+          stage: "embed",
+          done: 1,
+          total: 40,
+          updatedAt: new Date().toISOString(),
+        }),
+      ],
+    );
+    expect(
+      (await POST(request({ recoverJobId: "heartbeat-recovery" }))).status,
+    ).toBe(409);
+  });
 });

@@ -1,7 +1,9 @@
 // Classify only known failures; never expose provider bodies, URLs or credentials.
+import { STALLED_ERROR } from "./pipeline-lifecycle";
 export function pipelineError(message: string) {
   if (
     [
+      STALLED_ERROR,
       "Gemini quota reached. Wait for the quota to renew, then continue processing.",
       "Gemini is not configured. Ask the administrator to finish AI setup.",
       "Gemini access was rejected. The administrator should check the API key and model access.",

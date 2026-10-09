@@ -75,14 +75,17 @@ export function PipelineMonitor({
   const index = progress
     ? stages.findIndex((s) => s[0] === progress.stage)
     : -1;
-  async function start(collectSources: boolean) {
+  async function start(collectSources: boolean, recover = false) {
     setBusy(true);
     setError("");
     try {
       const r = await fetch("/api/admin/collect", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ collectSources }),
+        body: JSON.stringify({
+          collectSources,
+          ...(recover ? { recoverJobId: data?.job?.id } : {}),
+        }),
       });
       const result = await r.json();
       if (!r.ok) throw Error(result.error || t("Failed"));
@@ -107,8 +110,12 @@ export function PipelineMonitor({
             {t("Collected signals and AI conclusions are different stages.")}
           </p>
         </div>
-        <span className={`pipeline-status ${data.job?.status || "idle"}`}>
-          {running ? (
+        <span
+          className={`pipeline-status ${data.job?.stalled ? "failed" : data.job?.status || "idle"}`}
+        >
+          {data.job?.stalled ? (
+            <AlertCircle size={15} />
+          ) : running ? (
             <Activity size={15} />
           ) : data.job?.status === "failed" ? (
             <AlertCircle size={15} />
@@ -116,15 +123,17 @@ export function PipelineMonitor({
             <CheckCircle2 size={15} />
           )}{" "}
           {t(
-            data.job?.status === "queued"
-              ? "Queued"
-              : running
-                ? "Running"
-                : data.job?.status === "completed"
-                  ? "Completed"
-                  : data.job?.status === "failed"
-                    ? "Failed"
-                    : "Not started",
+            data.job?.stalled
+              ? "Stalled"
+              : data.job?.status === "queued"
+                ? "Queued"
+                : running
+                  ? "Running"
+                  : data.job?.status === "completed"
+                    ? "Completed"
+                    : data.job?.status === "failed"
+                      ? "Failed"
+                      : "Not started",
           )}
         </span>
       </div>
@@ -184,6 +193,34 @@ export function PipelineMonitor({
         </div>
       )}
       <div className="pipeline-explanation" role="status">
+        {data.job?.stalled && (
+          <p className="error-message">
+            {t(
+              "No progress for over an hour. The run may have stopped; restart it to unblock processing.",
+            )}
+          </p>
+        )}
+        {running && !data.job?.stalled && (
+          <p>
+            {t(
+              "A run is active. The launch buttons will become available when it finishes.",
+            )}
+          </p>
+        )}
+        {data.job && (
+          <p>
+            {t("Run started")}:{" "}
+            <time dateTime={data.job.startedAt}>
+              {new Date(data.job.startedAt).toLocaleString()}
+            </time>{" "}
+            · {t("Last progress")}:{" "}
+            <time dateTime={progress?.updatedAt || data.job.startedAt}>
+              {new Date(
+                progress?.updatedAt || data.job.startedAt,
+              ).toLocaleString()}
+            </time>
+          </p>
+        )}
         {data.job?.status === "failed" ? (
           <p>{t(data.job.error || "Failed")}</p>
         ) : data.job?.status === "completed" && c.queued > 0 ? (
@@ -229,6 +266,16 @@ export function PipelineMonitor({
       )}
       {admin && (
         <div className="pipeline-actions">
+          {data.job?.stalled && (
+            <button
+              className="primary-action"
+              disabled={busy || !data.configured}
+              onClick={() => start(false, true)}
+            >
+              {busy ? t("Working…") : t("Restart stalled processing")}
+              <RefreshCw size={16} />
+            </button>
+          )}
           <button
             className="primary-action"
             disabled={

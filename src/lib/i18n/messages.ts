@@ -533,6 +533,14 @@ The source response was too large or timed out. Try a smaller scope.|Respuesta d
 Retry after|Reintentar después|Erneut versuchen nach|Tentar após|再試行可能時刻|重试时间|Повторить после
 CSV imports are visible to signed-in users; do not upload private customer data.|Los CSV son visibles para usuarios registrados; no subas datos privados.|CSV-Importe sind für angemeldete Nutzer sichtbar; keine privaten Kundendaten hochladen.|CSV aparece para usuários conectados; não envie dados privados de clientes.|CSVはログインユーザーに表示されます。顧客の非公開情報をアップロードしないでください。|CSV导入对登录用户可见，请勿上传客户隐私数据。|CSV-импорт виден вошедшим пользователям; не загружайте личные данные клиентов.
 License|Licencia|Lizenz|Licença|ライセンス|许可|Лицензия
+Stalled|Detenido|Festgefahren|Parado|停止状態|已停滞|Завис
+Run started|Inicio|Startzeit|Início|開始時刻|开始时间|Запуск начат
+Last progress|Último progreso|Letzter Fortschritt|Último progresso|最終進捗|最后进展|Последний прогресс
+Restart stalled processing|Reiniciar procesamiento detenido|Festgefahrene Verarbeitung neu starten|Reiniciar processamento parado|停止した処理を再開|重启停滞的处理|Перезапустить зависшую обработку
+No progress for over an hour. The run may have stopped; restart it to unblock processing.|Sin progreso durante más de una hora. Reinicia para continuar.|Seit über einer Stunde kein Fortschritt. Starten Sie den Lauf erneut.|Sem progresso há mais de uma hora. Reinicie para continuar.|1時間以上進捗がありません。処理を再開してください。|超过一小时无进展，请重启处理。|Больше часа нет прогресса. Запуск мог остановиться; перезапустите его, чтобы продолжить обработку.
+A run is active. The launch buttons will become available when it finishes.|Hay un proceso activo. Los botones se habilitarán al terminar.|Ein Lauf ist aktiv. Die Startschaltflächen werden nach Abschluss verfügbar.|Uma execução está ativa. Os botões serão liberados ao concluir.|処理中です。完了すると開始ボタンが有効になります。|正在处理，完成后启动按钮将可用。|Идёт обработка. Кнопки запуска станут доступны после её завершения.
+This run is still active or has already finished. Refresh its status before restarting.|Este proceso sigue activo o ya terminó. Actualiza su estado.|Dieser Lauf ist noch aktiv oder bereits beendet. Aktualisieren Sie den Status.|Esta execução ainda está ativa ou já terminou. Atualize o status.|処理は実行中または完了済みです。状態を更新してください。|任务仍在运行或已结束，请刷新状态。|Этот запуск ещё активен или уже завершён. Обновите статус перед перезапуском.
+Processing stopped after an hour without progress. Restart processing to continue the queue.|Procesamiento detenido tras una hora sin progreso. Reinicia para continuar.|Verarbeitung nach einer Stunde ohne Fortschritt beendet. Starten Sie erneut.|Processamento parado após uma hora sem progresso. Reinicie para continuar.|1時間進捗がないため停止しました。処理を再開してください。|一小时无进展后处理已停止，请重启以继续队列。|Обработка остановлена после часа без прогресса. Перезапустите её, чтобы продолжить очередь.
 Paused|En pausa|Pausiert|Pausado|一時停止|已暂停|Пауза
 `;
 export const messages: Record<

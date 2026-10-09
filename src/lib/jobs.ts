@@ -49,28 +49,52 @@ export const dailyPipeline = inngest.createFunction(
           finishedAt: new Date(),
         })
         .where(
-          eq(
-            jobRuns.id,
-            event.data.event.data.jobId || event.data.event.id || "",
+          and(
+            eq(
+              jobRuns.id,
+              event.data.event.data.jobId ||
+                event.data.event.id ||
+                event.data.run_id,
+            ),
+            sql`${jobRuns.status} in ('queued','running')`,
           ),
         );
     },
   },
   [{ cron: "0 3 * * *" }, { event: "painradar/collect.requested" }],
-  async ({ step, event }) => {
-    const jobId = event.data.jobId || event.id || crypto.randomUUID();
+  async ({ step, event, runId }) => {
+    // Cron events may have no event ID. The run ID survives every durable replay.
+    const jobId = event.data.jobId || event.id || runId;
+    const [existing] = await db()
+      .select({ status: jobRuns.status })
+      .from(jobRuns)
+      .where(eq(jobRuns.id, jobId))
+      .limit(1);
+    if (existing && !["queued", "running"].includes(existing.status))
+      return { skipped: true };
+    const initialProgress = {
+      stage: "collect" as const,
+      done: 0,
+      total: 0,
+      updatedAt: new Date().toISOString(),
+    };
     const started = await step.run("start", async () => {
       if (event.data.jobId) {
         const r = await db()
           .update(jobRuns)
-          .set({ status: "running" })
+          .set({ status: "running", progress: initialProgress })
           .where(and(eq(jobRuns.id, jobId), eq(jobRuns.status, "queued")))
           .returning();
         return r.length > 0;
       }
       const r = await db()
         .insert(jobRuns)
-        .values({ id: jobId, job: "daily-radar", status: "running" })
+        .values({
+          id: jobId,
+          job: "daily-radar",
+          status: "running",
+          progress: initialProgress,
+        })
         .onConflictDoNothing()
         .returning();
       return r.length > 0;
@@ -239,7 +263,7 @@ export const dailyPipeline = inngest.createFunction(
             updatedAt: new Date().toISOString(),
           },
         })
-        .where(eq(jobRuns.id, jobId)),
+        .where(and(eq(jobRuns.id, jobId), eq(jobRuns.status, "running"))),
     );
     return { jobId };
   },
