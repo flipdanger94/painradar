@@ -1,3 +1,8 @@
+import {
+  sourceIds,
+  sourceNames,
+  sourceDescriptions,
+} from "@/lib/source-catalog";
 import { serverTranslation } from "@/lib/i18n/server";
 import { Text } from "@/components/language-provider";
 import { PipelineMonitor } from "@/components/pipeline-monitor";
@@ -17,24 +22,11 @@ export default async function Page() {
   const collectionReady =
     !!process.env.INNGEST_EVENT_KEY && !!process.env.INNGEST_SIGNING_KEY;
   const analysisReady = !!process.env.GEMINI_API_KEY;
-  const list = [
-    {
-      id: "hn",
-      name: "Hacker News",
-      description: "Public stories and comments through the Algolia API.",
-    },
-    {
-      id: "github",
-      name: "GitHub Issues",
-      description: "Public issues in explicitly configured repositories.",
-    },
-    {
-      id: "reddit",
-      name: "Reddit",
-      description:
-        "Public posts in configured communities, using authorized Reddit API access.",
-    },
-  ];
+  const list = sourceIds.map((id) => ({
+    id,
+    name: sourceNames[id],
+    description: sourceDescriptions[id],
+  }));
   const status = await pipelineStatus();
   return (
     <>

@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
-import { z } from "zod";
+import { sourceConfigInput } from "@/lib/sources/config";
+import { sourceNames } from "@/lib/source-catalog";
 import { db } from "@/db";
 import { sources } from "@/db/schema";
 import {
@@ -12,39 +13,12 @@ import {
 export const POST = endpoint(async (req) => {
   const u = await requireAdmin();
   await rateLimit(u.id);
-  const d = await input(
-    req,
-    z.object({
-      id: z.enum(["hn", "github", "reddit"]),
-      enabled: z.boolean(),
-      config: z.object({
-        since: z.iso
-          .datetime()
-          .refine(
-            (s) => new Date(s).getTime() <= Date.now(),
-            "Backfill date cannot be in the future",
-          )
-          .optional(),
-        pageBudget: z.number().int().min(1).max(10).default(3),
-        keywords: z.array(z.string().min(2).max(80)).max(10).optional(),
-        repositories: z
-          .array(z.string().regex(/^[a-zA-Z0-9_.-]+\/[a-zA-Z0-9_.-]+$/))
-          .max(20)
-          .optional(),
-        subreddits: z
-          .array(z.string().regex(/^[a-zA-Z0-9_]{2,30}$/))
-          .max(10)
-          .optional(),
-      }),
-    }),
-  );
+  const d = await input(req, sourceConfigInput);
   await db()
     .insert(sources)
     .values({
       id: d.id,
-      name: { hn: "Hacker News", github: "GitHub Issues", reddit: "Reddit" }[
-        d.id
-      ],
+      name: sourceNames[d.id],
       enabled: d.enabled,
       config: d.config,
     })

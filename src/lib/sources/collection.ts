@@ -14,6 +14,8 @@ const stateSchema = z.object({
     scope: z.number().int().min(0).max(19),
     page: z.number().int().min(0).max(10000),
     after: z.string().max(100).optional(),
+    retryAt: z.iso.datetime().optional(),
+    done: z.boolean().optional(),
   }),
   pages: z.number().int().min(0),
 });
@@ -25,6 +27,12 @@ export function collectionConfigHash(config: SourceConfig) {
         repositories: config.repositories || [],
         subreddits: config.subreddits || [],
         since: config.since || null,
+        ...(config.tags
+          ? { tags: config.tags, site: config.site || "stackoverflow" }
+          : {}),
+        ...(config.projects ? { projects: config.projects } : {}),
+        ...(config.forums ? { forums: config.forums } : {}),
+        ...(config.feeds ? { feeds: config.feeds } : {}),
       }),
     )
     .digest("hex");
@@ -82,7 +90,11 @@ export async function collectWindow<T>(
     const complete = page.nextCursor === null && !page.warning;
     const next = {
       ...state,
-      cursor: page.warning ? state.cursor : page.nextCursor || state.cursor,
+      cursor: page.pauseUntil
+        ? { ...(page.nextCursor || state.cursor), retryAt: page.pauseUntil }
+        : page.warning
+          ? state.cursor
+          : page.nextCursor || state.cursor,
       pages: state.pages + 1,
     };
     if (!(await onPage(page, next, complete)))

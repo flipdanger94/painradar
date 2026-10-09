@@ -1,3 +1,4 @@
+import { sourceIds, sourceNames } from "@/lib/source-catalog";
 import { serverTranslation } from "@/lib/i18n/server";
 import { Text } from "@/components/language-provider";
 import { languageCodes, languageLabels } from "@/lib/language-options";
@@ -76,9 +77,11 @@ export default async function Page({
           <option value="">
             <Text value={"All sources"} />
           </option>
-          <option value="hn">Hacker News</option>
-          <option value="github">GitHub Issues</option>
-          <option value="reddit">Reddit</option>
+          {sourceIds.map((id) => (
+            <option key={id} value={id}>
+              {sourceNames[id]}
+            </option>
+          ))}
         </select>
         <select
           name="confidence"

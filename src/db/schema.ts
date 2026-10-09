@@ -93,6 +93,7 @@ export const sources = pgTable("sources", {
       import("@/lib/sources/types").CollectionState
     >(),
   lastError: text("last_error"),
+  retryAfter: timestamp("retry_after", { withTimezone: true }),
 });
 export const rawSignals = pgTable(
   "raw_signals",

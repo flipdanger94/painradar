@@ -1909,3 +1909,24 @@ body {
   background: #4a2235;
   border-color: #ae5670;
 }
+.csv-preview {
+  display: grid;
+  gap: 12px;
+  max-height: 420px;
+  overflow: auto;
+  min-width: 0;
+}
+.csv-preview .signal-item {
+  padding: 14px;
+  overflow-wrap: anywhere;
+}
+.csv-consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.csv-consent input {
+  width: auto;
+  flex-shrink: 0;
+  margin-top: 4px;
+}

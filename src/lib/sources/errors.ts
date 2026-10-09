@@ -1,5 +1,25 @@
 // Return only known diagnostics: provider bodies may contain sensitive information.
 export function sourceError(source: string, message: string) {
+  if (
+    [
+      "Source retry later",
+      "Source backoff requested",
+      "Source daily quota reached",
+    ].includes(message)
+  )
+    return "The source requested a pause. Collection will resume after its retry time.";
+  if (message === "Configure source scopes before collecting")
+    return "Configure projects, tags, forums or feed URLs before collecting.";
+  if (message === "Invalid source configuration")
+    return "Check the source settings and scope names.";
+  if (message === "Only public projects are supported")
+    return "Only public projects can be collected.";
+  if (message === "Invalid feed response")
+    return "The URL did not return a valid RSS or Atom feed.";
+  if (
+    ["Source response too large", "Source request timed out"].includes(message)
+  )
+    return "The source response was too large or timed out. Try a smaller scope.";
   if (source === "reddit") {
     if (message === "Authorized Reddit API credentials required")
       return "Reddit API keys are missing. Add REDDIT_CLIENT_ID and REDDIT_CLIENT_SECRET to the production environment, redeploy, then start collection.";

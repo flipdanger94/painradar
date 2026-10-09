@@ -1,3 +1,4 @@
+import { stackexchange, gitlab, discourse, rss, csv } from "./extended";
 import {
   type SourceAdapter,
   type RawSignal,
@@ -406,6 +407,11 @@ export const adapters: Record<RawSignal["source"], SourceAdapter> = {
   hn: hn as SourceAdapter,
   github: github as SourceAdapter,
   reddit: reddit as SourceAdapter,
+  stackexchange,
+  gitlab,
+  discourse,
+  rss,
+  csv,
 };
 export type { RawSignal, SourceConfig };
 

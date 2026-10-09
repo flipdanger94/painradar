@@ -1,3 +1,4 @@
+import { CsvImportForm } from "@/components/csv-import-form";
 import { SubscriptionGrantForm } from "@/components/subscription-grant-form";
 import { Text } from "@/components/language-provider";
 
@@ -299,6 +300,7 @@ export default async function Page() {
               <p>No job runs yet.</p>
             )}
           </section>
+          <CsvImportForm />
           <SubscriptionGrantForm />
           <section className="panel detail-block">
             <h2>

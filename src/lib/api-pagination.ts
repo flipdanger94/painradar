@@ -1,3 +1,4 @@
+import { sourceIds } from "@/lib/source-catalog";
 import { languageCodes } from "@/lib/language-options";
 import { createHmac, timingSafeEqual, createHash } from "node:crypto";
 import { z } from "zod";
@@ -77,7 +78,7 @@ export const apiQuerySchema = z
     q: z.string().trim().max(200).optional(),
     industry: z.string().max(80).optional(),
     audience: z.string().max(100).optional(),
-    source: z.enum(["hn", "github", "reddit"]).optional(),
+    source: z.enum(sourceIds).optional(),
     confidence: z.enum(["Low", "Medium", "High"]).optional(),
     score: z.coerce.number().int().min(0).max(100).optional(),
     growth: z.coerce.number().min(-100).max(10000).optional(),

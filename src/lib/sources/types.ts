@@ -1,7 +1,8 @@
+import { sourceIds } from "../source-catalog";
 import { detectLanguage } from "../detect-language";
 import { z } from "zod";
 export const signalSchema = z.object({
-  source: z.enum(["hn", "github", "reddit"]),
+  source: z.enum(sourceIds),
   externalId: z.string().min(1).max(200),
   url: z
     .url()
@@ -23,6 +24,11 @@ export interface SourceConfig {
   keywords?: string[];
   repositories?: string[];
   subreddits?: string[];
+  tags?: string[];
+  site?: string;
+  projects?: string[];
+  forums?: string[];
+  feeds?: string[];
   since?: string;
   until?: string;
   pageBudget?: number;
@@ -31,11 +37,14 @@ export interface SourceCursor {
   scope: number;
   page: number;
   after?: string;
+  retryAt?: string;
+  done?: boolean;
 }
 export interface SourcePage<T = unknown> {
   records: T[];
   nextCursor: SourceCursor | null;
   warning?: string;
+  pauseUntil?: string;
 }
 export interface CollectionState {
   configHash: string;
