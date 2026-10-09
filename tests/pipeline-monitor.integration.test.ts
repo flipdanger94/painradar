@@ -83,6 +83,9 @@ describe("live collection progress", () => {
         )
       ).rows,
     ).toHaveLength(0);
+    await state.pg!.query(
+      "update job_runs set status='running' where id='run-one'",
+    );
     await recordProgress("run-one", "embed", 12, 40);
     expect((await pipelineStatus())?.job?.progress).toMatchObject({
       stage: "embed",
@@ -92,6 +95,8 @@ describe("live collection progress", () => {
     await state.pg!.query(
       "update job_runs set status='failed',finished_at=now(),error='private job error' where id='run-one'",
     );
+    await recordProgress("run-one", "embed", 13, 40);
+    expect((await pipelineStatus())?.job?.progress?.done).toBe(12);
     expect(JSON.stringify(await pipelineStatus())).not.toContain(
       "private job error",
     );
@@ -102,6 +107,32 @@ describe("live collection progress", () => {
         )
       ).rows,
     ).toHaveLength(1);
+  });
+  it("reports a stalled run using its last progress, rather than its starting time", async () => {
+    await state.pg!.query(
+      "update job_runs set status='completed' where status in ('queued','running')",
+    );
+    await state.pg!.query(
+      "insert into job_runs(id,job,status,created_at) values('stalled-visible','daily-radar','running',now()+interval '1 second'-interval '2 hours')",
+    );
+    // Make this the latest run while retaining an old last-progress timestamp.
+    await state.pg!.query(
+      "update job_runs set created_at=now()+interval '1 second',progress=$1 where id='stalled-visible'",
+      [
+        JSON.stringify({
+          stage: "embed",
+          done: 2,
+          total: 40,
+          updatedAt: new Date(Date.now() - 2 * 3600000).toISOString(),
+        }),
+      ],
+    );
+    expect((await pipelineStatus())?.job).toMatchObject({
+      id: "stalled-visible",
+      stalled: true,
+    });
+    await recordProgress("stalled-visible", "embed", 3, 40);
+    expect((await pipelineStatus())?.job?.stalled).toBe(false);
   });
   it("rotates grouping seeds beyond the first batch and rejects stale cursor writes", async () => {
     const first = await planGroupingBatch();

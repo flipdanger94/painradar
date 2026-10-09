@@ -11,6 +11,7 @@ import {
   ApiError,
 } from "@/lib/security";
 import { inngest } from "@/lib/jobs";
+import { recoverStalledJob } from "@/lib/pipeline-lifecycle";
 export const POST = endpoint(async (req) => {
   const u = await requireAdmin();
   await rateLimit("collect:" + u.id);
@@ -26,8 +27,19 @@ export const POST = endpoint(async (req) => {
     );
   const body = await input(
     req,
-    z.object({ collectSources: z.boolean().optional() }),
+    z.object({
+      collectSources: z.boolean().optional(),
+      recoverJobId: z.string().min(1).max(200).optional(),
+    }),
   );
+  if (body.recoverJobId) {
+    if (!(await recoverStalledJob(body.recoverJobId)))
+      throw new ApiError(
+        409,
+        "This run is still active or has already finished. Refresh its status before restarting.",
+      );
+    await audit(u.id, "pipeline.recovered", { jobId: body.recoverJobId });
+  }
   const jobId = randomUUID();
   const reservation = await db().execute(
     sql`insert into job_runs(id,job,status) values(${jobId},'daily-radar','queued') on conflict do nothing returning id`,

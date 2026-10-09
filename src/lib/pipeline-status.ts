@@ -2,7 +2,8 @@ import { sourceIds, type SourceId } from "./source-catalog";
 import { sourceError } from "./sources/errors";
 import { db, databaseReady } from "@/db";
 import { jobRuns, sources } from "@/db/schema";
-import { desc, eq, sql } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
+import { stalledJob } from "./pipeline-lifecycle";
 import { pipelineError } from "./pipeline-errors";
 import { embeddingModel, freeTier } from "./gemini";
 import { PIPELINE_LIMITS } from "./analysis-batches";
@@ -25,7 +26,7 @@ export async function recordProgress(
     .set({
       progress: { stage, done, total, updatedAt: new Date().toISOString() },
     })
-    .where(eq(jobRuns.id, id));
+    .where(and(eq(jobRuns.id, id), eq(jobRuns.status, "running")));
 }
 export async function pipelineStatus() {
   if (!databaseReady()) return null;
@@ -53,6 +54,8 @@ export async function pipelineStatus() {
     counts: counts.rows[0] as Record<string, number>,
     job: job
       ? {
+          id: job.id,
+          stalled: stalledJob(job),
           status: job.status,
           startedAt: job.createdAt.toISOString(),
           finishedAt: job.finishedAt?.toISOString() || null,
