@@ -1,4 +1,5 @@
 "use client";
+import { sourceIds, sourceNames } from "@/lib/source-catalog";
 import { Text, useTranslation } from "@/components/language-provider";
 
 import { languageCodes, languageLabels } from "@/lib/language-options";
@@ -142,30 +143,30 @@ export function RadarForm({
         <legend className="text-small muted">
           <Text value={"Sources"} />
         </legend>
-        {[
-          ["hn", "Hacker News"],
-          ["github", "GitHub Issues"],
-          ["reddit", "Reddit"],
-        ].map(([id, label]) => (
-          <label
-            key={id}
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              marginRight: 15,
-            }}
-          >
-            <input
-              style={{ width: "auto" }}
-              type="checkbox"
-              name="sources"
-              value={id}
-              defaultChecked={radar ? radar.sources.includes(id) : id === "hn"}
-            />
-            {label}
-          </label>
-        ))}
+        {sourceIds
+          .map((id) => [id, sourceNames[id]])
+          .map(([id, label]) => (
+            <label
+              key={id}
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                marginRight: 15,
+              }}
+            >
+              <input
+                style={{ width: "auto" }}
+                type="checkbox"
+                name="sources"
+                value={id}
+                defaultChecked={
+                  radar ? radar.sources.includes(id) : id === "hn"
+                }
+              />
+              {label}
+            </label>
+          ))}
       </fieldset>
       <fieldset>
         <legend className="text-small muted">{t("Languages")}</legend>

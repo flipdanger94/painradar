@@ -1,3 +1,4 @@
+import { sourceIds, sourceNames, type SourceId } from "@/lib/source-catalog";
 import Link from "next/link";
 import { ArrowUpRight, Radio } from "lucide-react";
 import { Text } from "@/components/language-provider";
@@ -60,9 +61,11 @@ export default async function SignalsPage({
           defaultValue={filters.source}
         >
           <option value="">{t("All sources")}</option>
-          <option value="hn">Hacker News</option>
-          <option value="github">GitHub Issues</option>
-          <option value="reddit">Reddit</option>
+          {sourceIds.map((id) => (
+            <option key={id} value={id}>
+              {sourceNames[id]}
+            </option>
+          ))}
         </select>
         <select
           name="state"
@@ -97,11 +100,7 @@ export default async function SignalsPage({
             <article className="signal-item" key={signal.id}>
               <div className="signal-item-meta">
                 <span className="badge">
-                  {signal.source === "hn"
-                    ? "Hacker News"
-                    : signal.source === "github"
-                      ? "GitHub Issues"
-                      : "Reddit"}
+                  {sourceNames[signal.source as SourceId] || signal.source}
                 </span>
                 <span className={`badge signal-state-${signal.state}`}>
                   <Text value={signalStateLabels[signal.state]} />
@@ -124,6 +123,11 @@ export default async function SignalsPage({
               <div className="signal-author">
                 <Radio size={13} />
                 {signal.author}
+                {signal.source === "stackexchange" && signal.license && (
+                  <span>
+                    <Text value="License" />: {signal.license}
+                  </span>
+                )}
                 <a href={signal.url} target="_blank" rel="noopener noreferrer">
                   <Text value="Read original discussion" /> ↗
                 </a>

@@ -1,3 +1,4 @@
+import { sourceIds } from "./source-catalog";
 import { db, databaseReady } from "@/db";
 import { rawSignals } from "@/db/schema";
 import { and, desc, eq, ilike, isNull, or, sql } from "drizzle-orm";
@@ -17,7 +18,7 @@ export function signalFilters(
   const page = Number(value("page"));
   return {
     q: value("q").trim().slice(0, 200),
-    source: ["hn", "github", "reddit"].includes(value("source"))
+    source: (sourceIds as readonly string[]).includes(value("source"))
       ? value("source")
       : "",
     state: signalStates.includes(value("state") as SignalState)
@@ -77,6 +78,7 @@ export async function listSignals(filters: SignalFilters) {
       excerpt: sql<string>`left(${rawSignals.content},240)`,
       url: rawSignals.url,
       author: rawSignals.author,
+      license: sql<string | null>`${rawSignals.metadata}->>'license'`,
       language: rawSignals.language,
       publishedAt: rawSignals.publishedAt,
       state: sql<SignalState>`case when ${rawSignals.duplicateOf} is not null then 'duplicate' when ${rawSignals.processedAt} is not null then 'processed' when ${ready} then 'related' else 'queued' end`,

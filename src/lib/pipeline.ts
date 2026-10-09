@@ -51,6 +51,8 @@ export async function collectSourceBatch(
   if (!source || !source.enabled) return { inserted: 0, complete: true };
   const adapter = adapters[sourceId as keyof typeof adapters];
   if (!adapter) throw new Error("Unsupported source");
+  if (source.retryAfter && source.retryAfter.getTime() > Date.now())
+    return { inserted: 0, complete: false, warning: "Source retry later" };
   let expectedState = source.collectionState;
   try {
     const config = source.config as SourceConfig;
@@ -97,6 +99,7 @@ export async function collectSourceBatch(
               : source.lastCollectedAt,
             collectionState: complete ? null : state,
             lastError: page.warning || null,
+            retryAfter: page.pauseUntil ? new Date(page.pauseUntil) : null,
           })
           .where(
             and(

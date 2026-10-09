@@ -1,3 +1,4 @@
+import { sourceIds, sourceNames } from "./source-catalog";
 import {
   claimInvoiceReconciliations,
   reconcileInvoices,
@@ -82,6 +83,9 @@ export const dailyPipeline = inngest.createFunction(
           { id: "hn", name: "Hacker News", config: { keywords: ["Ask HN"] } },
           { id: "github", name: "GitHub Issues", enabled: false },
           { id: "reddit", name: "Reddit", enabled: false },
+          ...sourceIds
+            .filter((id) => !["hn", "github", "reddit"].includes(id))
+            .map((id) => ({ id, name: sourceNames[id], enabled: false })),
         ])
         .onConflictDoNothing();
       return (
@@ -109,7 +113,17 @@ export const dailyPipeline = inngest.createFunction(
       for (let page = 0; page < source.pageBudget; page++) {
         const result = await step.run(
           "collectSource-" + source.id + "-page-" + page,
-          () => pipeline.collectSourceBatch(source.id, 1),
+          async () => {
+            try {
+              return await pipeline.collectSourceBatch(source.id, 1);
+            } catch {
+              return {
+                inserted: 0,
+                complete: false,
+                warning: "Source collection failed",
+              };
+            }
+          },
         );
         if (
           result.complete ||

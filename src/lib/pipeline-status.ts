@@ -1,3 +1,4 @@
+import { sourceIds, type SourceId } from "./source-catalog";
 import { sourceError } from "./sources/errors";
 import { db, databaseReady } from "@/db";
 import { jobRuns, sources } from "@/db/schema";
@@ -68,29 +69,39 @@ export async function pipelineStatus() {
       !!process.env.GEMINI_API_KEY &&
       !!process.env.INNGEST_EVENT_KEY &&
       !!process.env.INNGEST_SIGNING_KEY,
-    sources: sourceRows.map((s) => ({
-      id: s.id,
-      name: s.name,
-      enabled: s.enabled,
-      health: s.health,
-      error: s.lastError ? sourceError(s.id, s.lastError) : null,
-      signals: Number(
-        sourceCounts.rows.find((r) => r.source === s.id)?.signals || 0,
-      ),
-      completedThrough: s.lastCollectedAt?.toISOString() || null,
-      pages: s.collectionState?.pages || 0,
-      scopes:
-        (
-          s.config as {
-            repositories?: string[];
-            keywords?: string[];
-            subreddits?: string[];
-          }
-        ).repositories ||
-        (s.config as { keywords?: string[] }).keywords ||
-        (s.config as { subreddits?: string[] }).subreddits ||
-        [],
-    })),
+    sources: sourceRows
+      .sort(
+        (a, b) =>
+          sourceIds.indexOf(a.id as SourceId) -
+          sourceIds.indexOf(b.id as SourceId),
+      )
+      .map((s) => ({
+        id: s.id,
+        name: s.name,
+        enabled: s.enabled,
+        health: s.health,
+        error: s.lastError ? sourceError(s.id, s.lastError) : null,
+        signals: Number(
+          sourceCounts.rows.find((r) => r.source === s.id)?.signals || 0,
+        ),
+        completedThrough: s.lastCollectedAt?.toISOString() || null,
+        pages: s.collectionState?.pages || 0,
+        retryAt: s.retryAfter?.toISOString() || null,
+        scopes: Object.entries(s.config as Record<string, unknown>)
+          .filter(
+            ([key, value]) =>
+              [
+                "repositories",
+                "keywords",
+                "subreddits",
+                "tags",
+                "projects",
+                "forums",
+                "feeds",
+              ].includes(key) && Array.isArray(value),
+          )
+          .flatMap(([, value]) => value as string[]),
+      })),
     recent: recent.rows.map((r) => ({
       source: String(r.source),
       title: String(r.title),

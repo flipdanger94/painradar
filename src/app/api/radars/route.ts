@@ -1,3 +1,4 @@
+import { sourceIds } from "@/lib/source-catalog";
 import { languageCodes } from "@/lib/language-options";
 import { z } from "zod";
 import { eq, sql, and, isNull } from "drizzle-orm";
@@ -21,7 +22,7 @@ const radarSchema = z
     keywords: z.array(z.string().trim().min(2).max(80)).min(1).max(20),
     excludedWords: z.array(z.string().trim().max(80)).max(20).default([]),
     industries: z.array(z.string().max(80)).max(20).default([]),
-    sources: z.array(z.enum(["hn", "github", "reddit"])).min(1),
+    sources: z.array(z.enum(sourceIds)).min(1),
     languages: z.array(z.enum(languageCodes)).min(1),
     alertThreshold: z.number().int().min(0).max(100),
     frequency: z.enum(["daily", "weekly"]),

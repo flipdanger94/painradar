@@ -268,15 +268,21 @@ export function PipelineMonitor({
               <strong>{s.name}</strong>
               <span className="badge">
                 {t(
-                  !s.enabled
-                    ? "Disabled"
-                    : s.error
-                      ? "Failed"
-                      : s.health === "collecting"
-                        ? "Partial crawl"
-                        : s.health === "healthy"
-                          ? "Healthy"
-                          : "Not started",
+                  s.id === "csv"
+                    ? "CSV import"
+                    : s.retryAt &&
+                        new Date(s.retryAt).getTime() >
+                          new Date(data.observedAt).getTime()
+                      ? "Paused"
+                      : !s.enabled
+                        ? "Disabled"
+                        : s.error
+                          ? "Failed"
+                          : s.health === "collecting"
+                            ? "Partial crawl"
+                            : s.health === "healthy"
+                              ? "Healthy"
+                              : "Not started",
                 )}
               </span>
             </div>
@@ -295,6 +301,11 @@ export function PipelineMonitor({
               ))}
             </div>
             {s.error && <p role="alert">{t(s.error)}</p>}
+            {s.retryAt && (
+              <p className="text-small">
+                {t("Retry after")}: {new Date(s.retryAt).toLocaleString()}
+              </p>
+            )}
           </article>
         ))}
       </div>

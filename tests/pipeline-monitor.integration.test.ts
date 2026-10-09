@@ -64,7 +64,7 @@ describe("live collection progress", () => {
       awaitingGrouping: 25,
       opportunities: 0,
     });
-    expect(data?.sources[0]).toMatchObject({
+    expect(data?.sources.find((s) => s.id === "github")).toMatchObject({
       scopes: ["vercel/next.js"],
       signals: 26,
       health: "collecting",

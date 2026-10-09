@@ -1,4 +1,12 @@
 "use client";
+import {
+  sourceIds,
+  sourceNames,
+  sourceFields,
+  sourceHints,
+  type SourceId,
+} from "@/lib/source-catalog";
+import type { SourceConfig } from "@/lib/sources/types";
 
 import { Text, useTranslation } from "@/components/language-provider";
 
@@ -10,15 +18,9 @@ export function SourceConfigForm({
 }: {
   sources?: { id: string; enabled: boolean; config: unknown }[];
 }) {
-  const [source, setSource] = useState("hn");
+  const [source, setSource] = useState<Exclude<SourceId, "csv">>("hn");
   const active = sources.find((s) => s.id === source);
-  const config = (active?.config || {}) as {
-    repositories?: string[];
-    keywords?: string[];
-    subreddits?: string[];
-    pageBudget?: number;
-    since?: string;
-  };
+  const config = (active?.config || {}) as SourceConfig;
   const t = useTranslation();
   const [error, setError] = useState("");
   const [ok, setOk] = useState(false);
@@ -50,11 +52,10 @@ export function SourceConfigForm({
                 ...(f.get("since")
                   ? { since: new Date(String(f.get("since"))).toISOString() }
                   : {}),
-                [id === "github"
-                  ? "repositories"
-                  : id === "reddit"
-                    ? "subreddits"
-                    : "keywords"]: values,
+                [sourceFields[id as Exclude<SourceId, "csv">]]: values,
+                ...(id === "stackexchange"
+                  ? { site: String(f.get("site") || "stackoverflow") }
+                  : {}),
               },
             }),
           });
@@ -79,32 +80,58 @@ export function SourceConfigForm({
           id="config-source"
           name="source"
           value={source}
-          onChange={(e) => setSource(e.target.value)}
+          onChange={(e) => {
+            setSource(e.target.value as Exclude<SourceId, "csv">);
+            setError("");
+            setOk(false);
+          }}
+          disabled={busy}
         >
-          <option value="hn">Hacker News</option>
-          <option value="github">GitHub Issues</option>
-          <option value="reddit">Reddit</option>
+          {sourceIds
+            .filter((id) => id !== "csv")
+            .map((id) => (
+              <option key={id} value={id}>
+                {sourceNames[id]}
+              </option>
+            ))}
         </select>
       </div>
       <div>
         <label htmlFor="config-values">
-          <Text value={"Keywords / owner/repository / subreddit names"} />
+          <Text value={sourceHints[source]} />
         </label>
         <textarea
           id="config-values"
           name="values"
           key={source + "values"}
           defaultValue={(
-            config.repositories ||
-            config.subreddits ||
-            config.keywords ||
-            []
+            ((config as Record<string, unknown>)[
+              sourceFields[source]
+            ] as string[]) || []
           ).join(", ")}
           required
-          maxLength={1600}
+          maxLength={18000}
           placeholder={t("Comma-separated values")}
         />
       </div>
+      {source === "stackexchange" && (
+        <div>
+          <label htmlFor="config-site">
+            <Text value="Stack Exchange site" />
+          </label>
+          <input
+            id="config-site"
+            name="site"
+            key={source + "site"}
+            defaultValue={config.site || "stackoverflow"}
+            required
+            pattern="[-a-z0-9.]{2,80}"
+          />
+          <p className="text-small">
+            <Text value="Example: stackoverflow, superuser, serverfault" />
+          </p>
+        </div>
+      )}
       <div>
         <label htmlFor="config-since">
           <Text value={"Backfill start date (optional)"} />
@@ -151,7 +178,7 @@ export function SourceConfigForm({
           type="checkbox"
           name="enabled"
           key={source + "enabled"}
-          defaultChecked={active?.enabled ?? true}
+          defaultChecked={active?.enabled ?? false}
           style={{ width: "auto" }}
         />{" "}
         <Text value={"Enable collection"} />
@@ -166,7 +193,7 @@ export function SourceConfigForm({
       )}
       {error && (
         <p className="error-message" role="alert">
-          {error}
+          {t(error)}
         </p>
       )}
     </form>
